@@ -15,6 +15,7 @@ import {
   Button,
 } from "@nextui-org/react";
 import Image from "next/image";
+import { clientData } from "@/constant/clientData";
 // import { AcmeLogo } from "./AcmeLogo.jsx";
 
 export default function NavBar() {
@@ -42,6 +43,11 @@ export default function NavBar() {
       name: "Clientes",
       url: "/clientes",
     },
+    {
+      id: 5,
+      name: "Productos",
+      url: "/items",
+    },
   ];
 
   return (
@@ -55,7 +61,7 @@ export default function NavBar() {
           <NavbarBrand>
             {/* <AcmeLogo /> */}
             <Image alt="logo" height={40} src="/logo.png" width={40} />
-            <p className="font-bold text-inherit">Movento S.A.C</p>
+            <p className="font-bold text-inherit">{clientData.companyName}</p>
           </NavbarBrand>
         </Link>
       </NavbarContent>
@@ -76,12 +82,17 @@ export default function NavBar() {
             Clientes
           </Link>
         </NavbarItem>
+        <NavbarItem isActive={pathname == "/items"}>
+          <Link href="/items" aria-current="page">
+            Productos
+          </Link>
+        </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>
-          <Button onClick={() => signOut()} color="danger" variant="flat">
+          <Button onClick={() => signOut()} color="danger" variant="bordered">
             Salir
-            <IoIosLogOut />
+            <IoIosLogOut className="text-xl" />
           </Button>
         </NavbarItem>
       </NavbarContent>

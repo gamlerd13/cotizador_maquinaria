@@ -1,10 +1,75 @@
 import { CotizacionStatus } from "@prisma/client";
 import { Client, ClientCreate } from "./client";
+import { CotizacionItemItemGet, ItemGet } from "./items";
 
+// Done
+export interface CotizacionBase {
+  id: number;
+  status: CotizacionStatus;
+  code: string;
+  parentCode: string;
+  clientId?: number;
+  date: string; //
+  deliverTime: string;
+  deliverPlace: string;
+  paymentCondition: string;
+  offerValidity: string;
+  generalCondicion: string;
+  comments: string;
+  totalPrice: number;
+  isEdit: boolean;
+  includeIgv: boolean;
+  unregisteredClientName: string;
+  unregisteredClientContact: string;
+  unregisteredClientReference: string;
+  unregisteredClientRuc: string;
+}
+
+export interface UnregisteredClientForm {
+  unregisteredClientName: string;
+  unregisteredClientContact: string;
+  unregisteredClientReference: string;
+  unregisteredClientRuc: string;
+}
+
+export type CotizacionFormDataPost = {
+  clientId: number | null;
+  date: Date;
+  code: string;
+  parentCode: string;
+  deliverTime: string;
+  paymentCondition: string;
+  deliverPlace: string;
+  offerValidity: string;
+  generalCondicion: string;
+  comments: string;
+  totalPrice: number;
+  isEdit: boolean;
+  includeIgv: boolean;
+  items: DinamicFrontendItemItemPost[];
+  // Unregister client
+} & UnregisteredClientForm;
+
+// TODO: Esto trabaja en update, modificar
 export interface ProductItemType {
   key: number;
   description: string;
   model: string;
+  amount: number;
+  unitPrice: number;
+  totalPrice: number;
+}
+
+export interface DinamicFrontendItemItem {
+  key: number;
+  item: ItemGet;
+  amount: number;
+  unitPrice: number;
+  totalPrice: number;
+}
+
+export interface DinamicFrontendItemItemPost {
+  itemId: number;
   amount: number;
   unitPrice: number;
   totalPrice: number;
@@ -49,64 +114,15 @@ export interface CotizacionUpdate {
   totalPrice: string;
   [key: string]: any;
 }
-export interface PdfCotizacion {
-  id: number; //por si hay que cotizar desde backend
-  code: string;
-  clientName: string;
-  clientReference: string;
-  clientContact: string;
-  date: string;
-  items: ProductItemType[];
-  deliverTime: string;
-  paymentCondition: string;
-  totalPrice: number;
-}
 
-export interface CotizacionGet {
-  id: number; //por si hay que cotizar desde backend
-  client: Client | null;
-  clientId: number;
-  // undefined client
-  code: string;
-  parentCode: string;
-  clientName: string;
-  status: CotizacionStatus;
-  clientContact: string;
-  clientReference: string;
-  clientRuc: string;
+export type CotizacionGet = CotizacionBase;
 
-  date: string;
+export type CotizacionClientGet = CotizacionGet & { client: Client | null };
 
-  items: ProductItemType[];
-  deliverTime: string;
-  paymentCondition: string;
-  totalPrice: number;
-  isEdit: boolean;
-}
-
-export interface CotizacionPost {
-  client?: {
-    create: {
-      name: string;
-      contact: string;
-      ruc: string;
-      reference: string;
-      createAt: Date;
-    };
-  };
-  clientId?: number;
-  code: string;
-  clientName: string;
-  status: CotizacionStatus;
-  clientContact: string;
-  clientReference: string;
-  clientRuc: string;
-  date: Date;
-  items: ProductItemType[] | string;
-  deliverTime: string;
-  paymentCondition: string;
-  totalPrice: number;
-}
+// To get Cotizacion and cotizacion Item(product)
+export type CotizacionClientItemsGet = CotizacionClientGet & {
+  cotizacionItem: CotizacionItemItemGet[];
+};
 
 // export const statusLabels: { [key in CotizacionStatus]: string } = {
 //   [CotizacionStatus.DRAFT]: "BORRADOR",

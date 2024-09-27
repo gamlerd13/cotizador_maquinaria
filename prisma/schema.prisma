@@ -5,10 +5,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// datasource db {
-//   provider = "postgresql"
-//   url      = env("DATABASE_URL")
-// }
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
 // datasource db {
 //   provider  = "postgresql"
@@ -16,11 +16,11 @@ generator client {
 //   directUrl = env("DIRECT_URL")
 // }
 
-datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
-}
+// datasource db {
+//   provider  = "postgresql"
+//   url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+//   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+// }
 
 model User {
   id       Int     @id @default(autoincrement())
@@ -53,29 +53,75 @@ model Client {
   ruc        String
   reference  String
   createAt   DateTime     @default(now())
-  //agregar la relacion de cotizacion
   Cotizacion Cotizacion[]
 }
 
 model Cotizacion {
-  id              Int              @id @default(autoincrement())
-  status          CotizacionStatus @default(ESTADO1)
-  code            String
-  parentCode      String
-  clientId        Int?
-  client          Client?          @relation(fields: [clientId], references: [id])
-  //Client ---
-  clientName      String
-  clientContact   String
-  clientRuc       String
-  clientReference String
+  id                          Int              @id @default(autoincrement())
+  status                      CotizacionStatus @default(ESTADO1)
+  code                        String
+  parentCode                  String
+  clientId                    Int?
+  client                      Client?          @relation(fields: [clientId], references: [id])
+  unregisteredClientName      String?
+  unregisteredClientContact   String?
+  unregisteredClientReference String?
+  unregisteredClientRuc       String?
+  //frontend values
+  date                        DateTime
+  deliverTime                 String           @default("") // Tiempo de entrega
+  paymentCondition            String           @default("") // condicion de pagp
+  deliverPlace                String           @default("") // lugar de entrega
+  offerValidity               String           @default("") // validez de oferta
+  generalCondicion            String           @default("")
+  comments                    String           @default("")
+  totalPrice                  Float            @default(0.00)
+  isEdit                      Boolean          @default(false)
+  includeIgv                  Boolean          @default(true)
 
-  date             DateTime
-  deliverTime      String
-  paymentCondition String
-  totalPrice       Float
-  items            Json
-  isEdit           Boolean  @default(false)
+  cotizacionItem CotizacionItem[]
+}
+
+//Relation cotizacion with
+model CotizacionItem {
+  id         Int        @id @default(autoincrement())
+  item       Item       @relation(fields: [itemId], references: [id])
+  cotizacion Cotizacion @relation(fields: [cotizacionId], references: [id])
+  unitPrice  Float      @default(0.00)
+  amount     Float      @default(0.00)
+
+  totalPrice Float @default(0.00)
+
+  itemId       Int
+  cotizacionId Int
+
+  @@unique([itemId, cotizacionId]) // Garantiza que un Item solo se relacione una vez por Cotización
+}
+
+enum UnitOfMeasure {
+  UNIT //unidad
+  PIECE //Pieza
+  KILOGRAM // Kilogramo
+  GRAM // Gramo
+  LITER // Litro
+  MILLILITER // Mililitro
+  METER // Metro
+  CENTIMETER // Centímetro
+  BOX // Caja
+}
+
+model Item {
+  id              Int              @id @default(autoincrement())
+  name            String
+  brand           String           @default("")
+  description     String           @default("")
+  comment         String           @default("")
+  manufactureCode String           @default("")
+  weight          Float
+  unitPrice       Float
+  code            String           @unique
+  unitMeasure     UnitOfMeasure    @default(UNIT)
+  CotizacionItem  CotizacionItem[]
 }
 
 model LastCodeCotizacion {

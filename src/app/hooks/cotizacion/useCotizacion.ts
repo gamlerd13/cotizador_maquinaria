@@ -1,5 +1,10 @@
 "use client";
-import { CotizacionGet, statusLabels } from "@/models/cotizacion";
+import {
+  CotizacionClientGet,
+  CotizacionClientItemsGet,
+  CotizacionFormDataPost,
+  statusLabels,
+} from "@/models/cotizacion";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { CotizacionStatus } from "@prisma/client";
@@ -11,28 +16,17 @@ export const usePostCotizacion = () => {
   const [responseNewCotizacion, setResponseNewCotizacion] = useState<
     string | null
   >(null);
-  const addNewCotizacion = async (formDataNewCotizacion: FormData) => {
+  const addNewCotizacion = async (
+    formDataNewCotizacion: CotizacionFormDataPost
+  ) => {
     try {
-      console.log("esto es el usepsotCotizacion: ", formDataNewCotizacion);
-      const formDataEntries = Object.fromEntries(
-        formDataNewCotizacion.entries()
-      );
+      console.log(formDataNewCotizacion);
       const response = await axios.post(
         "api/cotizacion/",
-        formDataEntries,
-        {
-          headers: {
-            "Cache-Control":
-              "no-store, no-cache, must-revalidate, proxy-revalidate",
-            Pragma: "no-cache",
-            Expires: "0",
-            "Surrogate-Control": "no-store",
-          },
-        }
+        formDataNewCotizacion
 
         // JSON.stringify(formDataEntries)
       );
-      console.log("respueste de la api: ", response);
       if (response.status == 201) {
         toast.success("Se creó una cotizacion exitosamente");
         setResponseNewCotizacion(response.data);
@@ -56,16 +50,12 @@ export const usePutCotizacion = () => {
   >(null);
   const updateCotizacion = async (
     idCotizacion: number,
-    formDataNewCotizacion: FormData
+    formDataNewCotizacion: CotizacionFormDataPost
   ) => {
     try {
-      const formDataEntries = Object.fromEntries(
-        formDataNewCotizacion.entries()
-      );
       const response = await axios.put(
         `/api/cotizacion/update-code/${idCotizacion}`,
-        formDataEntries
-        // JSON.stringify(formDataEntries)
+        formDataNewCotizacion
       );
       if (response.status == 201) {
         toast.success("Se actualizó una cotizacion exitosamente");
@@ -73,7 +63,7 @@ export const usePutCotizacion = () => {
         router.push("/cotizaciones");
       }
     } catch (error) {
-      console.error("Hubo un error en useClient, getClient");
+      console.error("Hubo un error");
     }
   };
 
@@ -84,9 +74,9 @@ export const usePutCotizacion = () => {
 };
 
 export const useGetUpdateCotizacion = () => {
-  const [cotizacionList, setCotizacionList] = useState<CotizacionGet[] | null>(
-    null
-  );
+  const [cotizacionList, setCotizacionList] = useState<
+    CotizacionClientGet[] | null
+  >(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const getCotizaciones = async () => {
@@ -94,7 +84,6 @@ export const useGetUpdateCotizacion = () => {
       const response = await axios.get("api/cotizacion");
 
       if (response.status == 200) {
-        console.log(response.data);
         setCotizacionList(response.data);
       }
     } catch (error) {
@@ -135,5 +124,31 @@ export const useGetUpdateCotizacion = () => {
     cotizacionList,
     isLoading,
     updateCotizacion,
+  };
+};
+
+export const useGetCotizacionById = () => {
+  const [cotizacionList, setCotizacionList] =
+    useState<CotizacionClientItemsGet | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const getCotizaciones = async (idCotizacion: number) => {
+    try {
+      const response = await axios.get(`/api/cotizacion/${idCotizacion}`);
+
+      if (response.status == 200) {
+        setCotizacionList(response.data);
+      }
+    } catch (error) {
+      console.error("Hubo un error en useGetUpdateCotizacion, getCotizaciones");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return {
+    cotizacionList,
+    getCotizaciones,
+    isLoading,
   };
 };

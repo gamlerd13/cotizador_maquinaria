@@ -1,4 +1,3 @@
-"use server";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/db";
 import { InitialCodeCotizacionChild } from "@/models/cotizacion";
@@ -26,3 +25,5 @@ export async function GET(req: NextRequest, { params }: Params) {
     return NextResponse.error();
   }
 }
+
+export const dynamic = "force-dynamic";

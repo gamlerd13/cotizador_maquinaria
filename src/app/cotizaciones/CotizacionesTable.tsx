@@ -1,10 +1,7 @@
-import { getDateHour } from "@/lib/main";
-import { CotizacionGet, statusColors, statusLabels } from "@/models/cotizacion";
-import { FaFilePdf } from "react-icons/fa6";
-import { FaEdit } from "react-icons/fa";
-import { CotizacionStatus } from "@prisma/client";
-import { useRouter } from "next/navigation";
+// react
+import { useState } from "react";
 
+// ui components
 import {
   Table,
   TableHeader,
@@ -12,37 +9,43 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  getKeyValue,
   Spinner,
   Chip,
 } from "@nextui-org/react";
+import { Button, useDisclosure } from "@nextui-org/react";
 
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  useDisclosure,
-} from "@nextui-org/react";
-import { useState } from "react";
+// icons
+import { FaEdit } from "react-icons/fa";
+import { FaFilePdf } from "react-icons/fa6";
+
+// components
+import ModalEndCotizacion from "./modal/ModalEndQuotation";
+
+// libraries
 import ReactPdfComponent from "@/components/cotizacion/React-pdf";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 
+// utils and hooks
+import { getDateHour } from "@/lib/main";
+import { useRouter } from "next/navigation";
+
+// types
+import {
+  CotizacionClientGet,
+  statusColors,
+  statusLabels,
+} from "@/models/cotizacion";
+import { CotizacionEnd } from "./types/main";
+import { CotizacionStatus } from "@prisma/client";
+import { DropdownAcciones } from "./DropdownAcciones";
+
 interface CotizacionesTable {
-  cotizacionList: CotizacionGet[] | null;
+  cotizacionList: CotizacionClientGet[] | null;
   isLoading: boolean;
   updateCotizacion: (
     cotizacionId: number,
     typeEnding: CotizacionStatus
   ) => void;
-}
-interface CotizacionEnd {
-  id: number;
-  name: string;
-  code: string;
-  status: CotizacionStatus;
 }
 
 function CotizacionesTable({
@@ -62,7 +65,6 @@ function CotizacionesTable({
   };
   const handleFinalizarCotizacion = (typeEnding: CotizacionStatus) => {
     if (cotizacionEnd) {
-      console.log(typeEnding);
       updateCotizacion(cotizacionEnd.id, typeEnding);
     }
     onClose();
@@ -73,121 +75,12 @@ function CotizacionesTable({
   };
   return (
     <>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                <div className="flex justify-around">
-                  Cambiar de estado Cotización
-                  <Chip color="success">{cotizacionEnd?.code}</Chip>
-                </div>
-              </ModalHeader>
-              <ModalBody>
-                <div className="flex gap-2 justify-around">
-                  <Button
-                    className="w-[170px] max-w-[170px] text-wrap"
-                    size="sm"
-                    color={
-                      cotizacionEnd?.status == CotizacionStatus.ESTADO1
-                        ? "success"
-                        : "default"
-                    }
-                    onClick={() =>
-                      handleFinalizarCotizacion(CotizacionStatus.ESTADO1)
-                    }
-                  >
-                    <span>{statusLabels[CotizacionStatus.ESTADO1]}</span>
-                  </Button>
-                  <Button
-                    size="sm"
-                    className="w-[170px] max-w-[170px] text-wrap"
-                    color={
-                      cotizacionEnd?.status == CotizacionStatus.ESTADO2
-                        ? "success"
-                        : "default"
-                    }
-                    onClick={() =>
-                      handleFinalizarCotizacion(CotizacionStatus.ESTADO2)
-                    }
-                  >
-                    <span>{statusLabels[CotizacionStatus.ESTADO2]}</span>
-                  </Button>
-                </div>
-                <div className="flex gap-2 justify-around">
-                  <Button
-                    className="w-[170px] max-w-[170px] text-wrap"
-                    size="sm"
-                    color={
-                      cotizacionEnd?.status == CotizacionStatus.ESTADO3
-                        ? "success"
-                        : "default"
-                    }
-                    onClick={() =>
-                      handleFinalizarCotizacion(CotizacionStatus.ESTADO3)
-                    }
-                  >
-                    <span>{statusLabels[CotizacionStatus.ESTADO3]}</span>
-                  </Button>
-                  <Button
-                    className="w-[170px] max-w-[170px] text-wrap"
-                    size="sm"
-                    color={
-                      cotizacionEnd?.status == CotizacionStatus.ESTADO4
-                        ? "success"
-                        : "default"
-                    }
-                    onClick={() =>
-                      handleFinalizarCotizacion(CotizacionStatus.ESTADO4)
-                    }
-                  >
-                    <span className="">
-                      {" "}
-                      {statusLabels[CotizacionStatus.ESTADO4]}
-                    </span>
-                  </Button>
-                </div>
-
-                <div className="flex gap-2 justify-around">
-                  <Button
-                    size="sm"
-                    className="w-[170px] max-w-[170px] text-wrap"
-                    color={
-                      cotizacionEnd?.status == CotizacionStatus.ESTADO5
-                        ? "success"
-                        : "default"
-                    }
-                    onClick={() =>
-                      handleFinalizarCotizacion(CotizacionStatus.ESTADO5)
-                    }
-                  >
-                    {statusLabels[CotizacionStatus.ESTADO5]}
-                  </Button>
-                  <Button
-                    className="w-[170px] max-w-[170px] text-wrap"
-                    size="sm"
-                    color={
-                      cotizacionEnd?.status == CotizacionStatus.ESTADO6
-                        ? "success"
-                        : "default"
-                    }
-                    onClick={() =>
-                      handleFinalizarCotizacion(CotizacionStatus.ESTADO6)
-                    }
-                  >
-                    {statusLabels[CotizacionStatus.ESTADO6]}
-                  </Button>
-                </div>
-              </ModalBody>
-              <ModalFooter>
-                <Button size="sm" color="default" onPress={onClose}>
-                  cerrar
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      <ModalEndCotizacion
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        cotizacionEnd={cotizacionEnd}
+        handleFinalizarCotizacion={handleFinalizarCotizacion}
+      />
 
       <Table
         aria-label="Example table with dynamic content"
@@ -215,7 +108,9 @@ function CotizacionesTable({
           {(cotizacion) => (
             <TableRow key={cotizacion.id}>
               <TableCell>{cotizacion.code}</TableCell>
-              <TableCell>{cotizacion.client?.name || "Sin cliente"}</TableCell>
+              <TableCell>
+                {cotizacion.client?.name || cotizacion.unregisteredClientName}
+              </TableCell>
               <TableCell>
                 <div>{getDateHour(cotizacion.date)[0]}</div>
                 <div>{getDateHour(cotizacion.date)[1]}</div>
@@ -225,39 +120,25 @@ function CotizacionesTable({
                   {statusLabels[cotizacion.status]}
                 </Chip>
               </TableCell>
-              <TableCell>S/. {cotizacion.totalPrice}</TableCell>
+              <TableCell>$. {cotizacion.totalPrice}</TableCell>
 
               <TableCell>
-                <div className="flex gap-2">
-                  <span className="flex items-center justify-center text-2xl w-8  text-red-950 cursor-pointer rounded-full">
-                    <PDFDownloadLink
-                      document={<ReactPdfComponent cotizacion={cotizacion} />}
-                      fileName={`cotizacion-${cotizacion.code}.pdf`}
-                    >
-                      <FaFilePdf />
-                    </PDFDownloadLink>
-                  </span>
-                  <span
-                    onClick={() => handleOpenCotizarForm(cotizacion.id)}
-                    className="flex items-center justify-center text-2xl w-8 text-red-950 cursor-pointer rounded-full"
-                  >
-                    <FaEdit />
-                  </span>
-                  <Button
-                    size="sm"
-                    type="button"
-                    onPress={() =>
-                      handleOpenFinalizarModal({
-                        id: cotizacion.id,
-                        name: cotizacion.client?.name || "Sin cliente",
-                        code: cotizacion.code,
-                        status: cotizacion.status,
-                      })
-                    }
-                  >
-                    Cambiar Estado
-                  </Button>
-                </div>
+                <DropdownAcciones
+                  pdfDataCotizacion={cotizacion}
+                  handleOpenCotizarForm={() =>
+                    handleOpenCotizarForm(cotizacion.id)
+                  }
+                  handleOpenFinalizarModal={() =>
+                    handleOpenFinalizarModal({
+                      id: cotizacion.id,
+                      name:
+                        cotizacion.client?.name ||
+                        cotizacion.unregisteredClientName,
+                      code: cotizacion.code,
+                      status: cotizacion.status,
+                    })
+                  }
+                />
               </TableCell>
             </TableRow>
           )}

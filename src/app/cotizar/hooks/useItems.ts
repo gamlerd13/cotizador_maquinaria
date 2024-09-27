@@ -1,4 +1,5 @@
-import { ProductItemType } from "@/models/cotizacion";
+import { DinamicFrontendItemItem } from "@/models/cotizacion";
+import { ItemGet } from "@/models/items";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -9,30 +10,24 @@ interface Price {
 
 export default function useItems() {
   const initialItemValues = {
-    description: "",
-    model: "",
     amount: 0,
     unitPrice: 0,
     totalPrice: 0,
   };
-  const [Items, setItems] = useState<ProductItemType[]>([
-    {
-      key: 1,
-      ...initialItemValues,
-    },
-  ]);
-  const [prices, setPrices] = useState<Price[]>([
-    {
-      key: 1,
-      total: 0,
-    },
-  ]);
-  const [nextKey, setNextKey] = useState<number>(2);
+  const [dinamicItems, setItems] = useState<DinamicFrontendItemItem[]>([]);
+  const [prices, setPrices] = useState<Price[]>([]);
+  const [nextKey, setNextKey] = useState<number>(1);
 
-  const addItem = () => {
+  const addItem = (itemProduct: ItemGet) => {
+    //find repeat item
+    const repeatItem = dinamicItems.some(
+      (item) => item.item.id === itemProduct.id
+    );
+    if (repeatItem) return toast.error("No puede agregar producto repetido");
+
     setItems((prevItem) => [
       ...prevItem,
-      { key: nextKey, ...initialItemValues },
+      { key: nextKey, item: itemProduct, ...initialItemValues },
     ]);
     setPrices((prevPrice) => [...prevPrice, { key: nextKey, total: 0 }]);
     setNextKey((prevKey) => prevKey + 1);
@@ -40,7 +35,6 @@ export default function useItems() {
 
   //Con esto se trabaja el tema de los items dinamicos en el cliente, pero consume muchos recursos
   const updateItem = (id: number, clave: string, valor: string | number) => {
-    console.log(id, clave, valor);
     setItems((prevValues) =>
       prevValues.map((item) =>
         item.key === id ? { ...item, [clave]: valor } : item
@@ -49,16 +43,17 @@ export default function useItems() {
   };
 
   const removeItem = (idItem: number) => {
-    if (Items.length == 1) {
-      toast.error("Tiene que tener al menos un Item");
-      return;
-    }
+    // if (dinamicItems.length == 1) {
+    //   toast.error("Tiene que tener al menos un Item");
+    //   return;
+    // }
     setItems((prevItem) => prevItem.filter((item) => item.key !== idItem)); // {key: 1} , {key: 2} , {key: 3}   {key: 4}
     setPrices((prevPrice) => prevPrice.filter((price) => price.key !== idItem));
   };
 
   return {
-    Items,
+    dinamicItems,
+    setItems,
     addItem,
     updateItem,
     removeItem,

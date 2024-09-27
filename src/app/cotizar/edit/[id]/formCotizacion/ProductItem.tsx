@@ -1,82 +1,46 @@
-import { ProductItemType } from "@/models/cotizacion";
+import { DinamicFrontendItemItem } from "@/models/cotizacion";
 import { Button } from "@nextui-org/button";
-import { Input, Textarea } from "@nextui-org/input";
-import { useEffect, useState } from "react";
+import { Input } from "@nextui-org/input";
 import { BiTrash } from "react-icons/bi";
 
-interface Price {
-  key: number;
-  total: number;
-}
 interface ItemProp {
-  item: ProductItemType;
-  updateItem: (id: number, clave: string, valor: string | number) => void;
+  dinamicItem: DinamicFrontendItemItem;
   removeItem: (itemId: number) => void;
   index: number;
-  setPrices: React.Dispatch<React.SetStateAction<Price[]>>;
+  setDinamicItems: React.Dispatch<
+    React.SetStateAction<DinamicFrontendItemItem[]>
+  >;
+  updateItem: (key: number, clave: string, valor: number) => void;
 }
 export default function ProductItem({
-  item,
-  updateItem,
+  dinamicItem,
   removeItem,
+  updateItem,
   index,
-  setPrices,
+  setDinamicItems,
 }: ItemProp) {
-  const [itemAmount, setItemAmount] = useState<number>(item.amount);
-  const [unitPrice, setUnitPrice] = useState<number>(item.unitPrice);
-
-  useEffect(() => {
-    const updatePrices = (key: number) => {
-      setPrices((prevPrices) =>
-        prevPrices.map((price: Price) =>
-          price.key === key
-            ? { ...price, total: unitPrice * itemAmount }
-            : price
-        )
-      );
-    };
-    updatePrices(item.key);
-  }, [itemAmount, unitPrice, item.key, setPrices]);
-
   return (
     <div className="w-full">
       <hr className="pb-2" />
 
       <div className="flex flex-col gap-2">
         <div className="flex flex-grow gap-2">
-          <Input
-            type="hidden"
-            name={`${item.key}_id`}
-            value={item.key.toString()}
-          />
           <Button
             size="sm"
             className="h- hover:text-white hover:bg-rose-700 py-2"
             type="button"
-            onClick={() => removeItem(item.key)}
+            onClick={() => removeItem(dinamicItem.key)}
           >
             <BiTrash className="text-lg" />
           </Button>
 
           <Input
             size="sm"
-            className="w-full"
+            className="w-full z-0"
             type="text"
-            name={`${item.key}_description`}
-            defaultValue={item.description}
-            label="Descripción"
-            required
-          />
-        </div>
-
-        <div className="flex flex-grow gap-2">
-          <Textarea
-            placeholder="Ingrese el modelo"
-            size="sm"
-            name={`${item.key}_model`}
-            defaultValue={item.model}
-            label="Modelo"
-            className="w-full"
+            value={`${dinamicItem.item.code}-${dinamicItem.item.name}`}
+            label="Producto"
+            disabled
           />
         </div>
 
@@ -84,42 +48,38 @@ export default function ProductItem({
           <Input
             size="sm"
             required
-            className="flex-none w-[90px]"
+            className="flex-none w-[90px] z-0"
             type="number"
-            name={`${item.key}_amount`}
+            name={`${dinamicItem.item.id}_amount`}
             label="Cantidad"
-            value={itemAmount.toString()}
-            defaultValue={item.amount.toString()} //manejar en state
+            value={dinamicItem.amount.toString()}
             onChange={(e) => {
-              setItemAmount(parseFloat(e.target.value));
-              // handlePrices(item.key);
+              updateItem(dinamicItem.key, "amount", parseFloat(e.target.value));
             }}
           />
           <Input
             size="sm"
-            className="min-w-[110px]"
+            className="min-w-[110px] z-0"
             type="number"
-            name={`${item.key}_unitprice`}
+            name={`${dinamicItem.item.id}_unitprice`}
             label="P. Unitario"
-            value={unitPrice.toString()}
-            defaultValue={item.unitPrice.toString()} //manejar en state
+            value={dinamicItem.unitPrice.toString()}
             onChange={(e) => {
-              setUnitPrice(parseFloat(e.target.value));
-              // handlePrices(item.key);
+              updateItem(
+                dinamicItem.key,
+                "unitPrice",
+                parseFloat(e.target.value)
+              );
             }}
-          />
-          <Input
-            size="sm"
-            type="hidden"
-            value={(itemAmount * unitPrice).toFixed(2).toString()}
-            name={`${item.key}_totalprice`}
-            onChange={(e) => console.log(e.target.value)}
           />
           <Input
             size="sm"
             type="number"
             label="P. Total"
-            value={(itemAmount * unitPrice).toFixed(2).toString()}
+            className="z-0"
+            value={(dinamicItem.unitPrice * dinamicItem.amount)
+              .toFixed(2)
+              .toString()}
             disabled
           />
         </div>

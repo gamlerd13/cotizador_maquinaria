@@ -1,5 +1,4 @@
 import React from "react";
-import { data } from "./data";
 
 import {
   Font,
@@ -11,7 +10,11 @@ import {
   Image,
 } from "@react-pdf/renderer";
 
-import { CotizacionGet } from "@/models/cotizacion";
+import {
+  CotizacionClientGet,
+  CotizacionClientItemsGet,
+  CotizacionGet,
+} from "@/models/cotizacion";
 import { getDateHour } from "@/lib/main";
 import { table } from "console";
 
@@ -174,19 +177,23 @@ const styles = StyleSheet.create({
   },
 });
 
-const ReactPdfComponent = ({ cotizacion }: { cotizacion: CotizacionGet }) => {
+const ReactPdfComponent = ({
+  cotizacion,
+}: {
+  cotizacion: CotizacionClientItemsGet;
+}) => {
   const {
     client,
-    clientName,
-    clientContact,
-    clientReference,
-    clientRuc,
+    unregisteredClientName,
+    unregisteredClientContact,
+    unregisteredClientReference,
+    unregisteredClientRuc,
     code,
     date,
     deliverTime,
     paymentCondition,
     totalPrice,
-    items,
+    cotizacionItem,
   } = cotizacion;
 
   const formattedDate = getDateHour(date);
@@ -194,15 +201,17 @@ const ReactPdfComponent = ({ cotizacion }: { cotizacion: CotizacionGet }) => {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-  const itemsFormatted = items.map((item) => ({
+  const itemsFormatted = cotizacionItem.map((item) => ({
     ...item,
     unitPrice: item.unitPrice.toLocaleString("es-PE", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
+      useGrouping: false,
     }),
     totalPrice: item.totalPrice.toLocaleString("es-PE", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
+      useGrouping: false,
     }),
   }));
 
@@ -273,7 +282,7 @@ const ReactPdfComponent = ({ cotizacion }: { cotizacion: CotizacionGet }) => {
           {itemsFormatted.map((item, index) => (
             <View key={index} style={styles.tableRow}>
               <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
-                {item.key}
+                {item.id}
               </Text>
               <View
                 style={[
@@ -281,8 +290,10 @@ const ReactPdfComponent = ({ cotizacion }: { cotizacion: CotizacionGet }) => {
                   { flexDirection: "column", flex: 10 },
                 ]}
               >
-                <Text style={styles.itemDescription}>{item.description}</Text>
-                <Text>Modelo: {item.model}</Text>
+                <Text style={styles.itemDescription}>
+                  Name: {item.item.name}
+                </Text>
+                <Text>Code: {item.item.code}</Text>
               </View>
               <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
                 {item.amount}

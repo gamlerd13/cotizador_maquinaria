@@ -1,122 +1,76 @@
-import {
-  CotizacionType,
-  CotizacionPost,
-  ProductItemPost,
-} from "@/models/cotizacion";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/db";
-import { CotizacionStatus, Cotizacion } from "@prisma/client";
-import { Prisma } from "@prisma/client";
-export interface ProductItemType {
-  key: number;
-  description: string;
-  model: string;
-  amount: number;
-  unitPrice: number;
-  totalPrice: number;
-}
 
-export interface PdfCotizacion {
-  id: number; //por si hay que cotizar desde backend
-  code: string;
-  clientName: string;
-  clientReference: string;
-  clientContact: string;
-  date: string;
-  items: ProductItemType[];
-  deliverTime: string;
-  paymentCondition: string;
-  totalPrice: number;
-}
+// Types
+import { CotizacionFormDataPost } from "@/models/cotizacion";
+import { CotizacionStatus } from "@prisma/client";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const body: CotizacionType = await req.json();
-    console.log("Body start", body);
+    const body: CotizacionFormDataPost = await req.json();
     const {
-      client: clientBody,
-      clientName,
-      clientContact,
-      clientRuc,
-      clientReference,
+      clientId,
+      unregisteredClientName,
+      unregisteredClientContact,
+      unregisteredClientReference,
+      unregisteredClientRuc,
       date,
       deliverTime,
       paymentCondition,
+      deliverPlace,
+      offerValidity,
+      generalCondicion,
+      comments,
       totalPrice,
-      ...resto //son los items que hay que tiene,estos son dinamicos
+      isEdit,
+      includeIgv,
+      items,
     } = body;
 
-    const items: ProductItemType[] = Object.keys(resto)
-      .filter((key) => key.match(/^\d+_id$/))
-      .map((key) => {
-        const id = key.split("_")[0];
-        return {
-          key: parseInt(resto[`${id}_id`], 10),
-          description: resto[`${id}_description`],
-          model: resto[`${id}_model`],
-          amount: parseInt(resto[`${id}_amount`], 10),
-          unitPrice: parseFloat(resto[`${id}_unitprice`]),
-          totalPrice: parseFloat(resto[`${id}_totalprice`]),
-        };
-      });
-
-    //  manejar el codigo aca
+    //  handle code here
     const prefix = "2024-";
     let newNumber = 1; // Valor predeterminado si no hay registros
     const codeRecord = await prisma.codeCotizacion.findFirst();
     if (codeRecord) newNumber = codeRecord.nextCode + 1;
     const newCode = `${prefix}${newNumber.toString().padStart(4, "0")}`;
 
-    const dateString = date === "" ? new Date() : new Date(date);
-
     let newCotizacionConditional = null;
     //create client
     const commonData = {
+      date,
+      deliverPlace,
+      deliverTime,
+      offerValidity,
+      generalCondicion,
+      paymentCondition,
+      comments,
+      totalPrice,
+      isEdit,
+      includeIgv,
       status: CotizacionStatus.ESTADO1,
+      parentCode: newCode, //TODO: creck this if include
       code: newCode,
-      parentCode: newCode,
-      date: dateString,
-      deliverTime: deliverTime,
-      paymentCondition: paymentCondition,
-      totalPrice: parseFloat(totalPrice),
-      items: JSON.stringify(items),
+      clientId: clientId ? clientId : undefined,
+      unregisteredClientName: clientId ? undefined : unregisteredClientName,
+      unregisteredClientContact: clientId
+        ? undefined
+        : unregisteredClientContact,
+      unregisteredClientReference: clientId
+        ? undefined
+        : unregisteredClientReference,
+      unregisteredClientRuc: clientId ? undefined : unregisteredClientRuc,
     };
 
-    const cli = {
-      client: {
-        create: {
-          name: clientName.trim(),
-          contact: clientContact.trim(),
-          ruc: clientRuc.trim(),
-          reference: clientReference.trim(),
-          createAt: new Date(),
+    newCotizacionConditional = await prisma.cotizacion.create({
+      data: {
+        ...commonData,
+        cotizacionItem: {
+          createMany: {
+            data: items,
+          },
         },
       },
-    };
-    if (clientBody === "") {
-      const client = clientName.trim() !== "" ? cli.client : undefined;
-      newCotizacionConditional = await prisma.cotizacion.create({
-        data: {
-          ...commonData,
-          client,
-          clientName: "",
-          clientContact: "",
-          clientRuc: "",
-          clientReference: "",
-        },
-      });
-    } else if (!isNaN(parseInt(clientBody))) {
-      newCotizacionConditional = await prisma.cotizacion.create({
-        data: {
-          ...commonData,
-          clientName: clientName.trim(),
-          clientContact: clientContact.trim(),
-          clientRuc: clientRuc.trim(),
-          clientReference: clientReference.trim(),
-          clientId: parseInt(clientBody),
-        },
-      });
-    }
+    });
 
     if (!newCotizacionConditional) {
       throw new Error("No se pudo crear el pago");
@@ -164,16 +118,7 @@ export async function GET() {
       },
     });
 
-    const cotizacionesMap = await cotizaciones.map((coti) => {
-      const { items, ...todoDemas } = coti;
-
-      return {
-        ...todoDemas,
-        items: JSON.parse(items as string),
-      };
-    });
-
-    return NextResponse.json(cotizacionesMap, { status: 200 });
+    return NextResponse.json(cotizaciones, { status: 200 });
   } catch (error) {
     console.error("Error fetching data:", error);
     return NextResponse.error();

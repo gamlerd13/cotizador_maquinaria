@@ -1,8 +1,11 @@
+import { CotizacionClientItemsGet } from "@/models/cotizacion";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 export const useCotizacion = (idCotizacion: string) => {
-  const [cotizacion, setCotizacion] = useState(null);
+  const [cotizacion, setCotizacion] = useState<CotizacionClientItemsGet | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchCotizacion = async () => {
@@ -17,7 +20,7 @@ export const useCotizacion = (idCotizacion: string) => {
       }
     };
     fetchCotizacion();
-  }, []);
+  }, [idCotizacion]);
 
   return {
     cotizacion,

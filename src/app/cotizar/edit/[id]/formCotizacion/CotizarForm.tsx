@@ -13,7 +13,7 @@ import {
   usePostCotizacion,
   usePutCotizacion,
 } from "@/app/hooks/cotizacion/useCotizacion";
-import { CotizacionGet, ProductItemType } from "@/models/cotizacion";
+import { CotizacionClientGet } from "@/models/cotizacion";
 import { useDateTime } from "@/app/hooks/common/useDateTime";
 import { useLastCodeCotizacion } from "@/app/hooks/cotizacion/useLastCodeCotizacion";
 
@@ -24,7 +24,7 @@ interface ClientForm {
   clientReference: string;
 }
 
-function CotizarForm({ cotizacion }: { cotizacion: CotizacionGet }) {
+function CotizarForm({ cotizacion }: { cotizacion: CotizacionClientGet }) {
   const { Items, addItem, updateItem, removeItem, prices, setPrices } =
     useItems(cotizacion);
 
@@ -146,7 +146,7 @@ function CotizarForm({ cotizacion }: { cotizacion: CotizacionGet }) {
                 className="md:col-span-1"
                 type="hidden"
                 name="clientId"
-                defaultValue={cotizacion.client?.id.toString()}
+                defaultValue={cotizacion.clientId?.toString()}
               />
               <Input
                 size="sm"

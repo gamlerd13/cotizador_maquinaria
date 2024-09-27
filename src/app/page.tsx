@@ -2,8 +2,6 @@
 
 import Image from "next/image";
 import NavBar from "@/components/NavBar";
-import HtmlPdf from "@/components/cotizacion/HtmlPdf";
-import { Button } from "@nextui-org/button";
 import LandingHome from "./LandingHome";
 import TitlePage from "@/components/TitlePage";
 import Footer from "@/components/Footer";

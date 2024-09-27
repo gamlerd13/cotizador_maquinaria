@@ -1,4 +1,5 @@
-import { CotizacionGet, ProductItemType } from "@/models/cotizacion";
+import { CotizacionGet, DinamicFrontendItemItem } from "@/models/cotizacion";
+import { ItemGet } from "@/models/items";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -8,36 +9,27 @@ interface Price {
 }
 
 export default function useItems(cotizacion: CotizacionGet) {
-  // const initialItemValues = {
-  //   description: "",
-  //   model: "",
-  //   amount: 0,
-  //   unitPrice: 0,
-  //   totalPrice: 0,
-  // };
-
   const initialItemValues = {
-    description: "",
-    model: "",
+    item: {
+      id: 16,
+      name: "Milk editado",
+      brand: "DairyPure",
+      description: "Whole milk editado",
+      comment: "Organic, fresh",
+      manufactureCode: "MLK-006",
+      weight: 1,
+      unitPrice: 1.2,
+      code: "PRD006",
+      unitMeasure: "MILLILITER",
+    } as ItemGet,
     amount: 0,
     unitPrice: 0,
     totalPrice: 0,
   };
 
-  // const [Items, setItems] = useState<ProductItemType[]>([
-  //   {
-  //     key: 1,
-  //     ...initialItemValues,
-  //   },
-  // ]);
-  // const [prices, setPrices] = useState<Price[]>([
-  //   {
-  //     key: 1,
-  //     total: 0,
-  //   },
-  // ]);
-
-  const [Items, setItems] = useState<ProductItemType[]>(cotizacion.items);
+  const [Items, setItems] = useState<DinamicFrontendItemItem[]>(
+    cotizacion.items
+  );
   const [prices, setPrices] = useState<Price[]>(
     cotizacion.items.map((item) => ({ key: item.key, total: item.totalPrice }))
   );

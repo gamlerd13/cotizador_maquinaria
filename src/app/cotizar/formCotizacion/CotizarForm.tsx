@@ -1,100 +1,171 @@
 "use client";
-import React, { useState } from "react";
-import { Input } from "@nextui-org/input";
-import { Button, DateInput } from "@nextui-org/react";
-import { CalendarDateTime } from "@internationalized/date";
-import useItems from "../hooks/useItems";
+// React hooks
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+
+// ui componets
+import { Input, Textarea } from "@nextui-org/input";
+import { Checkbox, DatePicker, DateValue } from "@nextui-org/react";
+
+//components
 import ProductItem from "./ProductItem";
+import ItemSelect from "./ItemSelect";
+import { ClientSelectV2 } from "./ClientSelect";
 import ButtonSubmit from "@/components/Button";
-import { CiCirclePlus } from "react-icons/ci";
-import { Select, SelectItem } from "@nextui-org/react";
+
+// Hooks
+import useDinamicItems from "../hooks/useDinamicItems";
 import { useGetClientList } from "@/app/hooks/clients/useClient";
-import { usePostCotizacion } from "@/app/hooks/cotizacion/useCotizacion";
-import { ProductItemType } from "@/models/cotizacion";
 import { useCodeCotizacion } from "@/app/hooks/cotizacion/useCodeCotizacion";
+import { useInputSearchItem } from "@/app/hooks/items/useInputSearchItem";
 import { useDateTime } from "@/app/hooks/common/useDateTime";
 
-interface ClientForm {
-  clientName: string;
-  clientContact: string;
-  clientRuc: string;
-  clientReference: string;
+// Libs third party
+import { I18nProvider } from "@react-aria/i18n";
+import { usePostCotizacion } from "@/app/hooks/cotizacion/useCotizacion";
+import { now, getLocalTimeZone } from "@internationalized/date";
+
+//constant
+import { IGV } from "@/constant/finance";
+
+//types
+import { Client } from "@/models/client";
+import { ItemGet } from "@/models/items";
+import {
+  CotizacionFormDataPost,
+  UnregisteredClientForm,
+} from "@/models/cotizacion";
+import { toast } from "sonner";
+
+interface CotizacionValue {
+  clientId: number | null;
+  date: DateValue;
+  deliverTime: string;
+  paymentCondition: string;
+  deliverPlace: string;
+  offerValidity: string;
+  generalCondicion: string;
+  comments: string;
+  totalPrice: number;
+  isEdit: boolean;
+  includeIgv: boolean;
 }
 
+const clientInitialValues = {
+  unregisteredClientName: "",
+  unregisteredClientContact: "",
+  unregisteredClientReference: "",
+  unregisteredClientRuc: "",
+};
+
 function CotizarForm() {
-  const { Items, addItem, updateItem, removeItem, prices, setPrices } =
-    useItems();
+  const { dinamicItems, addItem, setDinamicItems, updateItem, removeItem } =
+    useDinamicItems();
+  const { addNewCotizacion } = usePostCotizacion();
+
+  const [clientValues, setClientValues] =
+    useState<UnregisteredClientForm>(clientInitialValues);
+
+  const [cotizacionValues, setCotizacionValues] = useState<CotizacionValue>({
+    clientId: null,
+    date: now(getLocalTimeZone()),
+    deliverTime: "",
+    paymentCondition: "",
+    deliverPlace: "",
+    offerValidity: "",
+    generalCondicion: "",
+    comments: "",
+    totalPrice: 0.0,
+    isEdit: false,
+    includeIgv: false,
+  });
+
+  const {
+    items: productsSearch,
+    getItems: getProductsSearch,
+    isLoading: isLoadingProductsSearch,
+  } = useInputSearchItem();
+
+  const debounceInputSearchRef = useRef<NodeJS.Timeout>();
+
   const { clientList, isLoading: isLoadingClient } = useGetClientList();
   const { currentDateTime } = useDateTime();
   const { lastCodeCotizacion } = useCodeCotizacion();
 
-  const { responseNewCotizacion, addNewCotizacion } = usePostCotizacion();
-
-  const initialClientValues = {
-    clientName: "",
-    clientContact: "",
-    clientReference: "",
-  };
-  const [clientValues, setClientValues] = useState<ClientForm | null>(null);
-
-  if (!lastCodeCotizacion) return;
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
-
-    await addNewCotizacion(formData);
-    //Guardar y generar pdf
-    console.log(formData);
+    if (dinamicItems.length === 0)
+      return toast.error("Agregar al menos un producto");
+    const cotizacionFormData: CotizacionFormDataPost = {
+      ...cotizacionValues,
+      totalPrice: cotizacionValues.includeIgv
+        ? parseFloat((totalPrice + totalPrice * (IGV / 100)).toFixed(2))
+        : parseFloat(totalPrice.toFixed(2)),
+      items: dinamicItems.map(({ item, key, ...dinamicItem }) => ({
+        ...dinamicItem,
+        itemId: item.id,
+      })),
+      ...clientValues,
+      date: new Date(cotizacionValues.date.toDate("es-Es")),
+      unregisteredClientName: "Sin cliente",
+    };
+    console.log(cotizacionFormData);
+    // await addNewCotizacion(cotizacionFormData);
   };
 
-  const handleSelect = (e: string) => {
-    const client = clientList?.find((client) => client.id == parseInt(e));
-
+  const handleClientSelect = (client: Client | null) => {
     if (!client) {
-      setClientValues(null);
+      setClientValues(clientInitialValues);
+      setCotizacionValues((prev) => ({ ...prev, clientId: null }));
     } else {
       setClientValues({
-        ...clientValues,
-        clientName: client.name,
-        clientContact: client.contact,
-        clientReference: client.reference,
-        clientRuc: client.ruc,
+        unregisteredClientName: client.name,
+        unregisteredClientContact: client.contact,
+        unregisteredClientReference: client.reference,
+        unregisteredClientRuc: client.ruc,
       });
+      setCotizacionValues((prev) => ({ ...prev, clientId: client.id }));
     }
   };
 
-  const totalPrice = prices
-    .reduce((accumulator, currentValue) => {
-      return currentValue.total + accumulator;
-    }, 0)
-    .toFixed(2);
+  //debounce in lookup
+  const handleInputChange = (e: string) => {
+    if (debounceInputSearchRef.current) {
+      clearTimeout(debounceInputSearchRef.current);
+    }
+
+    if (e !== "") {
+      debounceInputSearchRef.current = setTimeout(() => {
+        getProductsSearch(e);
+      }, 300);
+    }
+  };
+
+  const handleSelectItemSelect = (e: ItemGet) => {
+    addItem(e);
+  };
+
+  const totalPrice = parseFloat(
+    dinamicItems
+      .reduce((accumulator, currentValue) => {
+        return currentValue.totalPrice + accumulator;
+      }, 0)
+      .toFixed(2)
+  );
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center mb-4">
         <h1 className="font-medium text-slate-600">Cliente</h1>
         <div className="flex gap-x-2">
           {clientList && !isLoadingClient && (
-            <Select
-              size="sm"
-              className="w-32"
-              aria-label="selectClient"
-              placeholder="Seleccione"
-              name="client"
-              onChange={(e) => handleSelect(e.target.value)}
-            >
-              {clientList.map((client, index) => (
-                <SelectItem key={client.id || index} value={client.id}>
-                  {client.name}
-                </SelectItem>
-              ))}
-            </Select>
+            <ClientSelectV2
+              clientList={clientList}
+              handleSelect={handleClientSelect}
+            />
           )}
         </div>
       </div>
       <hr />
-
       <div className="w-full grid gap-y-2 mt-4">
         {lastCodeCotizacion && (
           <Input
@@ -107,7 +178,7 @@ function CotizarForm() {
           />
         )}
 
-        {clientValues ? (
+        {cotizacionValues.clientId ? (
           <>
             <div className="grid md:grid-cols-2 gap-2">
               <Input
@@ -115,7 +186,7 @@ function CotizarForm() {
                 className="md:col-span-1"
                 type="text"
                 name="clientName"
-                value={clientValues.clientName}
+                value={clientValues.unregisteredClientName}
                 label="Razón Social"
               />
               <Input
@@ -123,7 +194,7 @@ function CotizarForm() {
                 className="md:col-span-1"
                 type="text"
                 name="clientContact"
-                value={clientValues.clientContact}
+                value={clientValues.unregisteredClientContact}
                 label="Contacto"
               />
             </div>
@@ -134,7 +205,7 @@ function CotizarForm() {
                 className="md:col-span-1 "
                 type="text"
                 name="clientReference"
-                value={clientValues.clientReference}
+                value={clientValues.unregisteredClientReference}
                 label="Referencia"
               />
 
@@ -143,7 +214,7 @@ function CotizarForm() {
                 className="md:col-span-1 "
                 type="text"
                 name="clientRuc"
-                value={clientValues.clientRuc}
+                value={clientValues.unregisteredClientRuc}
                 label="Ruc"
               />
             </div>
@@ -157,13 +228,25 @@ function CotizarForm() {
                 type="text"
                 name="clientName"
                 label="Razón Social"
-                required
+                value={clientValues.unregisteredClientName}
+                onChange={(e) =>
+                  setClientValues((prev) => ({
+                    ...prev,
+                    unregisteredClientName: e.target.value,
+                  }))
+                }
               />
               <Input
                 size="sm"
                 className="md:col-span-1"
                 type="text"
                 name="clientContact"
+                onChange={(e) =>
+                  setClientValues((prev) => ({
+                    ...prev,
+                    unregisteredClientContact: e.target.value,
+                  }))
+                }
                 label="Contacto"
               />
             </div>
@@ -174,6 +257,12 @@ function CotizarForm() {
                 className="md:col-span-1 "
                 type="text"
                 name="clientReference"
+                onChange={(e) =>
+                  setClientValues((prev) => ({
+                    ...prev,
+                    unregisteredClientReference: e.target.value,
+                  }))
+                }
                 label="Referencia"
               />
 
@@ -182,80 +271,201 @@ function CotizarForm() {
                 className="md:col-span-1 "
                 type="text"
                 name="clientRuc"
+                onChange={(e) =>
+                  setClientValues((prev) => ({
+                    ...prev,
+                    unregisteredClientRuc: e.target.value,
+                  }))
+                }
                 label="Ruc"
               />
             </div>
           </>
         )}
         {currentDateTime && (
-          <DateInput label="Fecha" name="date" defaultValue={currentDateTime} />
+          <I18nProvider locale="es-ES">
+            <DatePicker
+              label="Fecha"
+              variant="bordered"
+              hideTimeZone
+              showMonthAndYearPickers
+              defaultValue={cotizacionValues.date}
+              onChange={(e) =>
+                setCotizacionValues((prev) => ({ ...prev, date: e }))
+              }
+            />
+          </I18nProvider>
         )}
       </div>
 
       <div className="w-full mt-4">
         <div className="flex justify-between items-center">
-          <div className="flex items-center justify-center h-full text-center">
-            <span className="font-medium text-slate-600">
-              Productos ({Items.length})
-            </span>
+          <div className="flex items-center justify-center h-full">
+            <div className="font-medium text-slate-600">
+              <h1>Productos</h1>
+              <span className="text-[12px]">
+                Cantidad: {dinamicItems.length}
+              </span>
+            </div>
           </div>
-          <Button size="sm" type="button" onClick={() => addItem()}>
-            Agregar
-            <CiCirclePlus className="text-xl" />
-          </Button>
+          <ItemSelect
+            itemList={productsSearch}
+            handleSelect={handleSelectItemSelect}
+            handleInputChange={handleInputChange}
+            isLoading={isLoadingProductsSearch}
+          />
         </div>
 
         <div className="w-full pt-4">
           <div className="grid gap-2">
-            {Items.length &&
-              Items.map((item, index) => (
+            {dinamicItems.length > 0 &&
+              dinamicItems.map((dinamicItem, index) => (
                 <ProductItem
+                  setDinamicItems={setDinamicItems}
                   updateItem={updateItem}
-                  setPrices={setPrices}
-                  item={item}
+                  dinamicItem={dinamicItem}
                   index={index + 1}
                   removeItem={removeItem}
-                  key={item.key}
+                  key={dinamicItem.key}
                 />
               ))}
           </div>
         </div>
       </div>
 
-      <div className="w-full pt-4">
-        <div className="flex justify-end">
-          <Input
-            size="sm"
-            className="max-w-[300px]"
-            label="Precio de Venta Total (No incluye I.G.V.)"
-            type="number"
-            name="totalPrice"
-            startContent={<span>s/. </span>}
-            value={totalPrice.toString()}
-          />
+      {dinamicItems.length > 0 && (
+        <div className="w-full pt-4">
+          <div className="flex justify-end gap-x-2">
+            <Checkbox
+              size="sm"
+              className="text-default"
+              checked={cotizacionValues.includeIgv}
+              onChange={(e) =>
+                setCotizacionValues((prev: CotizacionValue) => ({
+                  ...prev,
+                  includeIgv: !prev.includeIgv,
+                }))
+              }
+            >
+              <span className="text-[12px] text-default-500">Incluye IGV</span>
+            </Checkbox>
+            <Input
+              size="sm"
+              className="max-w-[300px] z-0"
+              label="Precio de Venta Total"
+              type="number"
+              name="totalPrice"
+              startContent={<span>$. </span>}
+              // value={totalPrice}
+              value={
+                cotizacionValues.includeIgv
+                  ? (totalPrice + totalPrice * (IGV / 100)).toFixed(2)
+                  : totalPrice.toFixed(2)
+              }
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       <h1 className="font-medium text-slate-600">Condiciones Comerciales</h1>
       <hr />
+      <div className="w-full">
+        <div className="w-full pt-2 flex flex-col sm:flex-row gap-x-2 ">
+          <Input
+            size="sm"
+            label="Plazo de Entrega"
+            placeholder="4-6 semanas"
+            name="deliverTime"
+            value={cotizacionValues.deliverTime}
+            onChange={(e) =>
+              setCotizacionValues((prev) => ({
+                ...prev,
+                deliverTime: e.target.value,
+              }))
+            }
+            type="text"
+          />
 
-      <div className="w-full pt-4 flex flex-col sm:flex-row gap-2 ">
-        <Input
-          size="sm"
-          label="Plazo de Entrega (Ejemplo: 4-6 )"
-          name="deliverTime"
-          type="text"
-        />
+          <Input
+            size="sm"
+            label="Condición de Pago"
+            name="paymentCondition"
+            placeholder="50% con la OC, 50% c. entrega"
+            value={cotizacionValues.paymentCondition}
+            onChange={(e) =>
+              setCotizacionValues((prev) => ({
+                ...prev,
+                paymentCondition: e.target.value,
+              }))
+            }
+            type="text"
+          />
+        </div>
+        <div className="w-full pt-2 flex flex-col sm:flex-row gap-2 ">
+          <Input
+            size="sm"
+            label="Lugar de Entrega"
+            name="deliverPlace"
+            placeholder="Tienda principal"
+            value={cotizacionValues.deliverPlace}
+            onChange={(e) =>
+              setCotizacionValues((prev) => ({
+                ...prev,
+                deliverPlace: e.target.value,
+              }))
+            }
+            type="text"
+          />
 
-        <Input
-          size="sm"
-          label="Condición de Pago"
-          name="paymentCondition"
-          placeholder="50% con la OC, 50% c. entrega"
-          type="text"
-        />
+          <Input
+            size="sm"
+            label="Validez de oferta"
+            name="offerValidity"
+            placeholder="3 meses"
+            value={cotizacionValues.offerValidity}
+            onChange={(e) =>
+              setCotizacionValues((prev) => ({
+                ...prev,
+                offerValidity: e.target.value,
+              }))
+            }
+            type="text"
+          />
+        </div>
+
+        <div className="w-full pt-2 flex flex-col sm:flex-row gap-2 ">
+          <Textarea
+            size="sm"
+            label="Condiciones Generales"
+            name="generalCondicion"
+            placeholder="Agregar condiciones extras ..."
+            value={cotizacionValues.generalCondicion}
+            onChange={(e) =>
+              setCotizacionValues((prev) => ({
+                ...prev,
+                generalCondicion: e.target.value,
+              }))
+            }
+            type="text"
+          />
+        </div>
+        <div className="w-full pt-2 flex flex-col sm:flex-row gap-2 ">
+          <Textarea
+            size="sm"
+            label="Comentarios"
+            name="comments"
+            placeholder="Agregar comentarios"
+            value={cotizacionValues.comments}
+            onChange={(e) =>
+              setCotizacionValues((prev) => ({
+                ...prev,
+                comments: e.target.value,
+              }))
+            }
+            type="text"
+          />
+        </div>
       </div>
-
       <div className="flex justify-end pt-4">
         <ButtonSubmit text="Generar cotización" />
       </div>
