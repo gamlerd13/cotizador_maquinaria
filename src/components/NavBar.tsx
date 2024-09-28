@@ -15,7 +15,7 @@ import {
   Button,
 } from "@nextui-org/react";
 import Image from "next/image";
-import { clientData } from "@/constant/clientData";
+import { companyData } from "@/constant/companyData";
 // import { AcmeLogo } from "./AcmeLogo.jsx";
 
 export default function NavBar() {
@@ -52,7 +52,7 @@ export default function NavBar() {
 
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen}>
-      <NavbarContent>
+      <NavbarContent justify="start">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
@@ -60,8 +60,8 @@ export default function NavBar() {
         <Link color="foreground" href="/">
           <NavbarBrand>
             {/* <AcmeLogo /> */}
-            <Image alt="logo" height={40} src="/logo.png" width={40} />
-            <p className="font-bold text-inherit">{clientData.companyName}</p>
+            <Image alt="logo" height={40} src="/logo.png" width={150} />
+            <p className="font-bold text-inherit">{companyData.companyName}</p>
           </NavbarBrand>
         </Link>
       </NavbarContent>

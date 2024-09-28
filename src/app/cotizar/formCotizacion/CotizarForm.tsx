@@ -32,6 +32,7 @@ import { Client } from "@/models/client";
 import { ItemGet } from "@/models/items";
 import {
   CotizacionFormDataPost,
+  CotizacionFormDataPut,
   UnregisteredClientForm,
 } from "@/models/cotizacion";
 import { toast } from "sonner";
@@ -109,7 +110,7 @@ function CotizarForm() {
       unregisteredClientName: "Sin cliente",
     };
     console.log(cotizacionFormData);
-    // await addNewCotizacion(cotizacionFormData);
+    await addNewCotizacion(cotizacionFormData);
   };
 
   const handleClientSelect = (client: Client | null) => {

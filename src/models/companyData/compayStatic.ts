@@ -1,4 +1,4 @@
-export interface ClientData {
+export interface CompanyData {
   companyName: string;
   location: string;
   ruc: number;
@@ -7,7 +7,11 @@ export interface ClientData {
 }
 
 export interface BankAccount {
-  name: string;
-  currencySymbol: string;
-  creditCardnumber: string;
+  id: number;
+  bankName: string;
+  accounts: {
+    name: string;
+    currencySymbol: string;
+    creditCardnumber: string;
+  }[];
 }

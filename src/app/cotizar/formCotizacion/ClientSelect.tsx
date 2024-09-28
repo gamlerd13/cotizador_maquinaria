@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 import { Client } from "@/models/client";
-import { Select, SelectItem } from "@nextui-org/select";
-import SelectReactSelect, {
-  GroupBase,
-  Options,
-  OptionsOrGroups,
-  SingleValue,
-  PropsValue,
-} from "react-select";
+import SelectReactSelect from "react-select";
 
 interface ClientSelectProps {
   clientList: Client[];
@@ -17,27 +10,6 @@ interface OptionsProps {
   value: Client;
   label: string;
 }
-[];
-
-// function ClientSelect({ clientList, handleSelect }: ClientSelectProps) {
-//   return (
-//     <Select
-//       size="sm"
-//       className="w-32"
-//       aria-label="selectClient"
-//       placeholder="Seleccione"
-//       name="client"
-//       onChange={(e) => handleSelect(e.target.value)}
-//     >
-//       {clientList.map((client, index) => (
-//         <SelectItem key={client.id || index} value={client.id}>
-//           {client.name}
-//         </SelectItem>
-//       ))}
-//     </Select>
-//   );
-// }
-// export default ClientSelect;
 
 export function ClientSelectV2({
   clientList,
@@ -47,9 +19,9 @@ export function ClientSelectV2({
     value: client, // El objeto cliente completo
     label: client.name, // El nombre del cliente que se muestra en el select
   }));
-  const [clientSelected, setClientSelected] = useState<
-    OptionsProps | undefined
-  >(undefined);
+  const [clientSelected, setClientSelected] = useState<OptionsProps | null>(
+    null
+  );
 
   const onChange = (e: OptionsProps) => {
     console.log(e);

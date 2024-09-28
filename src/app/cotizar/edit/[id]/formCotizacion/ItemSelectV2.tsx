@@ -1,6 +1,5 @@
-import React, { ChangeEvent, useState } from "react";
-import SelectReactSelect, { PropsValue } from "react-select";
-import { useInputSearchItem } from "@/app/hooks/items/useInputSearchItem";
+import React from "react";
+import SelectReactSelect from "react-select";
 import { ItemGet } from "@/models/items";
 
 interface ItemSelectProps {
@@ -20,24 +19,20 @@ export default function ItemSelectV2({
   handleSelect,
   isLoading,
 }: ItemSelectProps) {
-  const [inputSearchValue, setInputSearchValue] =
-    useState<PropsValue<string>>("");
-
-  const options: Option[] = itemList.map((client) => ({
-    value: client,
-    label: `${client.code} - ${client.name}`,
+  const options: Option[] = itemList.map((item) => ({
+    value: item,
+    label: `${item.code} - ${item.name}`,
   }));
 
-  const handleOnchange = (item: ItemGet) => {
-    handleSelect(item);
-    setInputSearchValue("");
+  const handleOnchange = (e: Option) => {
+    handleSelect(e.value);
   };
 
   return (
     <SelectReactSelect
       options={options}
-      onChange={(e) => handleOnchange(e?.value)}
-      value={inputSearchValue}
+      onChange={(e) => handleOnchange(e as unknown as Option)}
+      value={null}
       onInputChange={(e) => {
         handleInputChange(e);
       }}

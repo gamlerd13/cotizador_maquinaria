@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { clientData } from "@/constant/clientData";
+import { companyData } from "@/constant/companyData";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: clientData.companyName,
+  title: companyData.companyName,
   description: "Cotizador web",
 };
 

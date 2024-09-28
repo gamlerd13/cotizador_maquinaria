@@ -8,6 +8,7 @@ import {
   Link,
   Image,
 } from "@nextui-org/react";
+import { companyData } from "@/constant/companyData";
 
 interface Servicio {
   id: number;
@@ -23,41 +24,43 @@ export default function LandingHome() {
       linkName: "Cotizador",
       link: "/cotizar",
       description:
-        "Cree cotizaciones precisas y detalladas para sus productos y servicios. Personalice cada aspecto para satisfacer las necesidades de sus clientes. ",
+        "Crea cotizaciones detalladas y personalizadas para tus productos y servicios.",
     },
     {
       id: 2,
       linkName: "Cotizaciones",
       link: "/cotizaciones",
       description:
-        "Administre y revise todas las cotizaciones generadas. Mantenga un registro organizado y acceda fácilmente a cada cotización en cualquier momento.",
+        "Administra y revisa tus cotizaciones fácilmente en un solo lugar.",
     },
-    // {
-    //   id: 3,
-    //   linkName: "Clientes",
-    //   link: "/clientes",
-    //   description:
-    //     "Gestione su base de datos de clientes de manera eficiente. Acceda rápidamente a la información de contacto y el historial de cotizaciones de cada cliente.",
-    // },
+    {
+      id: 3,
+      linkName: "Clientes",
+      link: "/clientes",
+      description:
+        "Gestiona la información de tus clientes y su historial de cotizaciones.",
+    },
+    {
+      id: 4,
+      linkName: "Productos",
+      link: "/items",
+      description:
+        "Organiza y gestione tus productos de forma rápida y eficiente.",
+    },
   ];
+
   return (
     <Card className="w-full">
       <CardHeader className="flex gap-3">
-        <Image
-          alt="/logo"
-          height={100}
-          radius="sm"
-          src="/logo.png"
-          width={100}
-        />
+        <Image alt="/logo" radius="sm" src="/logo.png" width={200} />
         <div className="flex flex-col">
-          <p className="text-md">Movento S.A.C</p>
+          <p className="text-md">{companyData.companyName}</p>
           <p className="text-small text-default-500">Sistema de cotización</p>
         </div>
       </CardHeader>
       <Divider />
       <CardBody>
-        <div className="flex justify-center gap-4 flex-wrap">
+        <div className="flex justify-center gap-4 flex-wrap py-4">
           {servicios.map((servicio) => (
             <Servicios key={servicio.id} servicio={servicio} />
           ))}
@@ -70,16 +73,13 @@ export default function LandingHome() {
 
 function Servicios({ servicio }: { servicio: Servicio }) {
   return (
-    <Card className="w-[300px]">
-      <CardBody>
-        <span>{servicio.description}</span>
-      </CardBody>
-      <Divider />
-      <CardFooter>
-        <Link showAnchorIcon href={`${servicio.link}`}>
-          Ir a {servicio.linkName}
-        </Link>
-      </CardFooter>
-    </Card>
+    <Link href={`${servicio.link}`}>
+      <Card className="w-[300px] h-full hover:bg-neutral-400 shadow-cyan-500/50 hover:opacity-75">
+        <CardBody className="p-4">
+          <span>{servicio.description}</span>
+        </CardBody>
+        <Divider />
+      </Card>
+    </Link>
   );
 }

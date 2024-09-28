@@ -1,6 +1,7 @@
 import {
   InitialCodeCotizacionChild,
   CotizacionFormDataPost,
+  CotizacionFormDataPut,
 } from "@/models/cotizacion";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/db";
@@ -20,7 +21,7 @@ interface Params {
 export async function PUT(req: NextRequest, { params }: Params) {
   try {
     const cotizacionId = params.id;
-    const body: CotizacionFormDataPost = await req.json();
+    const body: CotizacionFormDataPut = await req.json();
     const {
       clientId,
       unregisteredClientName,
@@ -28,7 +29,6 @@ export async function PUT(req: NextRequest, { params }: Params) {
       unregisteredClientReference,
       unregisteredClientRuc,
       date,
-      code,
       parentCode,
       deliverTime,
       paymentCondition,

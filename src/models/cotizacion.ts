@@ -35,8 +35,6 @@ export interface UnregisteredClientForm {
 export type CotizacionFormDataPost = {
   clientId: number | null;
   date: Date;
-  code: string;
-  parentCode: string;
   deliverTime: string;
   paymentCondition: string;
   deliverPlace: string;
@@ -49,6 +47,10 @@ export type CotizacionFormDataPost = {
   items: DinamicFrontendItemItemPost[];
   // Unregister client
 } & UnregisteredClientForm;
+
+export type CotizacionFormDataPut = CotizacionFormDataPost & {
+  parentCode: string;
+};
 
 // TODO: Esto trabaja en update, modificar
 export interface ProductItemType {

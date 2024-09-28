@@ -17,6 +17,7 @@ import {
 } from "@/models/cotizacion";
 import { getDateHour } from "@/lib/main";
 import { table } from "console";
+import { bankAccounts, companyData } from "@/constant/companyData";
 
 Font.register({
   family: "Roboto",
@@ -33,6 +34,7 @@ const ReactPdfComponentV2 = ({
 }) => {
   const {
     client,
+
     unregisteredClientName,
     unregisteredClientContact,
     unregisteredClientReference,
@@ -41,9 +43,21 @@ const ReactPdfComponentV2 = ({
     date,
     deliverTime,
     paymentCondition,
+    deliverPlace,
+    offerValidity,
+    generalCondicion,
+    comments,
     totalPrice,
+    includeIgv,
     cotizacionItem,
   } = cotizacion;
+
+  const clientData = {
+    name: client ? client.name : unregisteredClientName,
+    contact: client ? client.contact : unregisteredClientContact,
+    reference: client ? client.reference : unregisteredClientReference,
+    ruc: client ? client.ruc : unregisteredClientRuc,
+  };
 
   const formattedDate = getDateHour(date);
   const formattedTotalPrice = totalPrice.toLocaleString("es-PE", {
@@ -70,75 +84,84 @@ const ReactPdfComponentV2 = ({
         <View
           style={[{ flexDirection: "row", justifyContent: "space-between" }]}
         >
-          <View>
-            <Image src="/logo1.jpg" style={{ width: 165, height: 22 }} />
-            <View style={[{ paddingHorizontal: 8 }]}>
-              <Text>VORAZ DEL PERU SAC</Text>
-              <Text>AV.MARISCAL NIETO N°326, URB.</Text>
-              <Text>R.U.C. 20498189394</Text>
+          <View style={{ flex: 2, paddingHorizontal: 8 }}>
+            <Image src="/logov1.jpeg" style={{ width: 165 }} />
+            <View style={[{ paddingVertical: 16 }]}>
+              <Text style={[styles.boldText]}>{companyData.companyName}</Text>
+              <Text style={[styles.boldText]}>{companyData.location}</Text>
+              <Text>R.U.C. {companyData.ruc}</Text>
             </View>
-            <View style={[{ paddingHorizontal: 8 }]}>
+            <View style={[{ paddingVertical: 8 }]}>
               <Text>Señor (a) (es):</Text>
-              <Text>ITALTRAC SELVA SAC</Text>
-              <Text>
-                AV. UNION NRO. 1199 UCAYALI Coronel Portillo Coronel Portillo
-              </Text>
-              <Text>RUC: 20285093245</Text>
-              <Text>Teléfono/Fax:</Text>
+              <Text style={[styles.boldText]}>{clientData.name}</Text>
+              <Text>{clientData.reference}</Text>
+              <Text>RUC: {clientData.ruc}</Text>
+              <Text>Teléfono/Fax: {clientData.contact}</Text>
             </View>
           </View>
-          <View>
-            <Image src="/logo1.jpg" style={{ width: 165, height: 22 }} />
+          <View style={{ flex: 3, paddingHorizontal: 8, flexDirection: "row" }}>
+            <View style={{ flex: 1 }}>
+              <Image src="/logov2.jpeg" style={{ width: 90 }} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Image src="/logov4.jpeg" style={{ width: 90 }} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Image src="/logov3.jpeg" style={{ width: 90 }} />
+            </View>
           </View>
-          <View style={[{ paddingHorizontal: "8px", width: "100%" }]}>
-            <Image src="/logo1.jpg" style={{ width: 165, height: 22 }} />
-
+          <View style={[{ flex: 3, paddingHorizontal: 8, width: "100%" }]}>
             <View style={[{ paddingHorizontal: "8px", width: "100%" }]}>
               <Text style={[{ fontSize: 14, fontWeight: 700 }]}>
-                COTIZACION Nº 0007 - 0000003259
+                COTIZACION Nº {code}
               </Text>
 
               {/* table header */}
               <View style={[{ paddingHorizontal: "8px", width: "100%" }]}>
-                <View style={stylestable.tableRow}>
-                  <View style={stylestable.tableColHeader}>
-                    <Text style={stylestable.tableCell}>Item</Text>
+                <View style={stylesTable.tableRow}>
+                  <View style={stylesTable.tableColHeader}>
+                    <Text style={stylesTable.tableCell}>
+                      Fecha Emisión: {formattedDate[0]} a las {formattedDate[1]}
+                    </Text>
                   </View>
                 </View>
 
                 {/* Table items */}
-                <View style={stylestable.tableRow}>
-                  <View style={stylestable.tableCol}>
-                    <Text style={stylestable.tableCell}>
-                      {unregisteredClientContact}
+                <View style={stylesTable.tableRow}>
+                  <View style={stylesTable.tableCol}>
+                    <Text style={stylesTable.tableCell}>
+                      Condición de venta: {paymentCondition}
                     </Text>
                   </View>
                 </View>
-                <View style={stylestable.tableRow}>
-                  <View style={stylestable.tableCol}>
-                    <Text style={stylestable.tableCell}>
-                      {unregisteredClientContact}
+                <View style={stylesTable.tableRow}>
+                  <View style={stylesTable.tableCol}>
+                    <Text style={stylesTable.tableCell}>
+                      Validez de Oferta: {offerValidity}
                     </Text>
                   </View>
                 </View>
-                <View style={stylestable.tableRow}>
-                  <View style={stylestable.tableCol}>
-                    <Text style={stylestable.tableCell}>
-                      {unregisteredClientContact}
+                <View style={stylesTable.tableRow}>
+                  <View style={stylesTable.tableCol}>
+                    <Text style={stylesTable.tableCell}>
+                      Plazo de Entrega: {deliverTime}
                     </Text>
                   </View>
                 </View>
-                <View style={stylestable.tableRow}>
-                  <View style={stylestable.tableCol}>
-                    <Text style={stylestable.tableCell}>
-                      {unregisteredClientContact}
+                <View style={stylesTable.tableRow}>
+                  <View style={stylesTable.tableCol}>
+                    <Text style={stylesTable.tableCell}>
+                      Luega de Entrega: {deliverPlace}
                     </Text>
                   </View>
                 </View>
-                <View style={stylestable.tableRow}>
-                  <View style={stylestable.tableCol}>
-                    <Text style={stylestable.tableCell}>
-                      {unregisteredClientContact}
+                <View style={stylesTable.tableRow}>
+                  <View style={stylesTable.tableCol}>
+                    <Text style={stylesTable.tableCell}>
+                      Generar orden de compra a:{"\n"}
+                      <Text>{companyData.companyName}</Text>
+                      {"\n"}
+                      <Text>R.U.C {companyData.ruc}</Text>
                     </Text>
                   </View>
                 </View>
@@ -147,87 +170,72 @@ const ReactPdfComponentV2 = ({
           </View>
         </View>
 
-        <View style={styles.startLogo} fixed>
-          <Image src="/logo1.jpg" style={{ width: 165, height: 22 }} />
-        </View>
-        <View style={styles.headerContainer}>
-          <View style={styles.dateContainer}>
-            <Text style={styles.date}>{formattedDate[0]}</Text>
-          </View>
-          <View style={styles.titleContainer}>
-            <Text style={[styles.title, styles.boldText]}>
-              COTIZACIÓN No {code}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.companyInfoContainer}>
-          <View style={styles.cellCompanyInfo}>
-            <Text style={styles.companyInfo}>Razón social: MOVENTO S.A.C.</Text>
-            <Text style={styles.companyInfo}>RUC: 20611599308</Text>
-            <Text style={styles.companyInfo}>
-              Calle Parque San Martin 376 - Pueblo Libre
-            </Text>
-          </View>
-          <View style={styles.cellCompanyInfo}>
-            <Text style={styles.companyInfo}>Telefono: 902196904</Text>
-            <Text style={styles.companyInfo}>
-              Correo:{" "}
-              <Text style={{ color: "#00109e" }}>ventas@moventodrives.com</Text>
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.clientInfoContainer}>
-          <Text style={styles.clientInfoHeader}>CLIENTE:</Text>
-          <View style={styles.clientInfo}>
-            <View style={styles.cellClientInfo}>
-              <Text>Razón social: {client?.name}</Text>
-              <Text>Contacto: {client?.contact}</Text>
-              <Text>Referencia: {client?.reference}</Text>
-            </View>
-            <View style={styles.cellClientInfo}>
-              <Text>Ruc: {client?.ruc}</Text>
-            </View>
-          </View>
-        </View>
+        {/* Table */}
 
         <View style={styles.table}>
           <View style={[styles.tableRow, styles.tableHeader]}>
             <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
-              Item
+              N° Item
             </Text>
-            <Text style={[styles.tableCell, { flex: 10 }]}>Descripción</Text>
+            <Text style={[styles.tableCell, { flex: 1 }]}>Código Art.</Text>
             <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
-              Cant.
+              Código Fab.
+            </Text>
+            <Text style={[styles.tableCell, styles.cellFlex, { flex: 3 }]}>
+              Obs.
             </Text>
             <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
-              P.U.
+              Cantidad
+            </Text>
+            <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
+              Und.
+            </Text>
+            <Text style={[styles.tableCell, styles.cellFlex, { flex: 6 }]}>
+              Nombre
             </Text>
             <Text style={[styles.tableCell, styles.cellFlex, { flex: 2 }]}>
-              Precio total S/.
+              Marca
+            </Text>
+            <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
+              Peso Kg.
+            </Text>
+            <Text style={[styles.tableCell, styles.cellFlex, { flex: 2 }]}>
+              Precio unitario US$
+            </Text>
+            <Text style={[styles.tableCell, styles.cellFlex, { flex: 2 }]}>
+              Precio venta US$
             </Text>
           </View>
           {itemsFormatted.map((item, index) => (
             <View key={index} style={styles.tableRow}>
               <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
-                {item.id}
+                {index + 1}
               </Text>
-              <View
-                style={[
-                  styles.tableCell,
-                  { flexDirection: "column", flex: 10 },
-                ]}
-              >
-                <Text style={styles.itemDescription}>
-                  Name: {item.item.name}
-                </Text>
-                <Text>Code: {item.item.code}</Text>
-              </View>
+              <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
+                {item.item.code}
+              </Text>
+              <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
+                {item.item.manufactureCode}
+              </Text>
+              <Text style={[styles.tableCell, styles.cellFlex, { flex: 3 }]}>
+                {item.item.comment}
+              </Text>
               <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
                 {item.amount}
               </Text>
               <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
+                {item.item.unitMeasure}
+              </Text>
+              <Text style={[styles.tableCell, styles.cellFlex, { flex: 6 }]}>
+                {item.item.name}
+              </Text>
+              <Text style={[styles.tableCell, styles.cellFlex, { flex: 2 }]}>
+                {item.item.brand}
+              </Text>
+              <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
+                {item.item.weight}
+              </Text>
+              <Text style={[styles.tableCell, styles.cellFlex, { flex: 2 }]}>
                 {item.unitPrice}
               </Text>
               <Text style={[styles.tableCell, styles.cellFlex, { flex: 2 }]}>
@@ -237,55 +245,72 @@ const ReactPdfComponentV2 = ({
           ))}
         </View>
 
+        {/* Other */}
+
         <View style={styles.totalPrice}>
           <Text style={styles.cellTotalPrice}>
-            PRECIO DE VENTA TOTAL (NO INCLUYE I.G.V.){" "}
+            VALOR DE VENTA TOTAL ({includeIgv ? "SÍ" : "NO"}) Incluye I.G.V
           </Text>
           <Text style={styles.cellTotalPrice}> S/. {formattedTotalPrice}</Text>
         </View>
 
-        <View style={styles.tableFooter}>
-          <Text>TIEMPO DE ENTREGA: </Text>
-          <Text>{deliverTime}</Text>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ flex: 1, fontSize: 8 }}>
+            <Text>
+              Sin otro particular de momento, nos despedimos de ustedes.
+              Atentamente,
+            </Text>
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text>Observaciones:</Text>
+
+            <Text style={{ fontSize: 8 }}>{comments}</Text>
+          </View>
         </View>
 
-        <View style={styles.termsInfoContainer}>
-          <Text style={styles.termsInfoHeader}>CONDICIONES COMERCIALES:</Text>
-          <View style={styles.termsInfo}>
-            <Text style={styles.boldText}>CONDICIÓN DE PAGO: </Text>
-            <Text style={styles.paymentCondition}>
-              {paymentCondition || "A tratar"}.
-            </Text>
+        <View style={{ flexDirection: "row", marginTop: 20 }}>
+          <View style={{ flex: 1 }}>
+            <Text>Condiciones generales:</Text>
+            <Text style={{ fontSize: 8 }}>{generalCondicion}</Text>
           </View>
-          <View style={styles.termsInfo}>
-            <Text style={styles.boldText}>VALIDEZ DE LA OFERTA: </Text>
-            <Text>30 días.</Text>
+          <View style={{ flex: 1 }}>
+            <Text>Cuentas Bancarias: </Text>
+
+            <View style={{ fontSize: 8, flexDirection: "row" }}>
+              <View style={{ flex: 1 }}>
+                {bankAccounts.map((bankAccount, index) => (
+                  <View key={bankAccount.id}>
+                    {index % 2 === 0 &&
+                      bankAccount.accounts.map((account) => (
+                        <View key={account.name}>
+                          <Text>
+                            {account.name} - {account.currencySymbol}{" "}
+                            {account.creditCardnumber}
+                          </Text>
+                        </View>
+                      ))}
+                  </View>
+                ))}
+              </View>
+              <View style={{ flex: 1 }}>
+                {bankAccounts.map((bankAccount, index) => (
+                  <View key={bankAccount.id}>
+                    {index % 2 !== 0 &&
+                      bankAccount.accounts.map((account) => (
+                        <View key={account.name}>
+                          <View key={account.name}>
+                            <Text>
+                              {account.name} - {account.currencySymbol}{" "}
+                              {account.creditCardnumber}
+                            </Text>
+                          </View>
+                        </View>
+                      ))}
+                  </View>
+                ))}
+              </View>
+            </View>
           </View>
-          <View style={styles.termsInfo}>
-            <Text style={styles.boldText}>GARANTIA: </Text>
-            <Text>
-              La garantía es por 6 meses luego de la puesta en servicio.
-            </Text>
-          </View>
-          <Text style={[styles.termsInfo, styles.boldText]}>
-            No CUENTA BANCARIA DE MOVENTO S.A.C.
-          </Text>
-          <Text style={styles.termsInfo}>
-            {[
-              "BANCO INTERBANK",
-              "SOLES: 200-3005630612",
-              "CCI SOLES: 003-200-003005630612-36",
-              "DOLARES: 200-003005630620",
-              "CCI DOLARES: 003-200-003005630620-39",
-              "Cuenta detracción del banco de la nación - Cuenta Corriente: 00-002-212722",
-            ].join("\n")}
-          </Text>
-        </View>
-        <View style={styles.endLogo}>
-          <Image
-            src="/logo_movento_drives.png"
-            style={{ width: 140, height: 160 }}
-          />
         </View>
       </Page>
     </Document>
@@ -294,7 +319,7 @@ const ReactPdfComponentV2 = ({
 
 export default ReactPdfComponentV2;
 
-const stylestable = StyleSheet.create({
+const stylesTable = StyleSheet.create({
   table: {
     width: "auto",
     borderStyle: "solid",
@@ -302,29 +327,29 @@ const stylestable = StyleSheet.create({
     borderColor: "#bfbfbf",
   },
   tableRow: {
-    flexDirection: "row",
+    flexDirection: "column",
   },
   tableColHeader: {
-    width: "25%",
+    width: "100%",
     borderStyle: "solid",
     borderWidth: 1,
     borderColor: "#bfbfbf",
     backgroundColor: "#f0f0f0",
     padding: 4,
-    textAlign: "center",
+    textAlign: "left",
   },
   tableCol: {
-    width: "25%",
+    width: "100%",
     borderStyle: "solid",
     borderWidth: 1,
     borderColor: "#bfbfbf",
     padding: 4,
-    textAlign: "center",
+    textAlign: "left",
   },
   tableCell: {
-    margin: "auto",
+    textAlign: "left",
     marginTop: 5,
-    fontSize: 10,
+    fontSize: 8,
   },
 });
 
@@ -453,11 +478,12 @@ const styles = StyleSheet.create({
   },
   table: {
     paddingBottom: 5,
+    fontSize: 8,
   },
   tableHeader: {
-    backgroundColor: "#002060",
+    backgroundColor: "#c42f29",
     color: "#fff",
-    padding: 5,
+    padding: 2,
     textAlign: "center",
   },
   tableRow: {
@@ -475,6 +501,6 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   cellFlex: {
-    textAlign: "center",
+    textAlign: "left",
   },
 });

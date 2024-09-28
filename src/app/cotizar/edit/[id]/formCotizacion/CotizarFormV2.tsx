@@ -40,6 +40,7 @@ import {
   CotizacionClientGet,
   CotizacionClientItemsGet,
   CotizacionFormDataPost,
+  CotizacionFormDataPut,
   UnregisteredClientForm,
 } from "@/models/cotizacion";
 import { toast } from "sonner";
@@ -126,7 +127,7 @@ function CotizarFormV2({
     e.preventDefault();
     if (dinamicItems.length === 0)
       return toast.error("Agregar al menos un producto");
-    const cotizacionFormData: CotizacionFormDataPost = {
+    const cotizacionFormData: CotizacionFormDataPut = {
       ...cotizacionValues,
       totalPrice: cotizacionValues.includeIgv
         ? parseFloat((totalPrice + totalPrice * (IGV / 100)).toFixed(2))
@@ -137,7 +138,7 @@ function CotizarFormV2({
       })),
       ...clientValues,
       date: new Date(cotizacionValues.date.toDate("es-Es")),
-      unregisteredClientName: "Sin cliente",
+      unregisteredClientName: "Sin cliente", //TODO: Porque hize esto
     };
     if (cotizacion.id)
       await updateCotizacion(cotizacion.id, cotizacionFormData);

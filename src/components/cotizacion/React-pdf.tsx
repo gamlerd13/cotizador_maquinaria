@@ -17,6 +17,7 @@ import {
 } from "@/models/cotizacion";
 import { getDateHour } from "@/lib/main";
 import { table } from "console";
+import { companyData } from "@/constant/companyData";
 
 Font.register({
   family: "Roboto",
@@ -234,7 +235,9 @@ const ReactPdfComponent = ({
 
         <View style={styles.companyInfoContainer}>
           <View style={styles.cellCompanyInfo}>
-            <Text style={styles.companyInfo}>Razón social: MOVENTO S.A.C.</Text>
+            <Text style={styles.companyInfo}>
+              Razón social: {companyData.companyName}
+            </Text>
             <Text style={styles.companyInfo}>RUC: 20611599308</Text>
             <Text style={styles.companyInfo}>
               Calle Parque San Martin 376 - Pueblo Libre
@@ -339,7 +342,7 @@ const ReactPdfComponent = ({
             </Text>
           </View>
           <Text style={[styles.termsInfo, styles.boldText]}>
-            No CUENTA BANCARIA DE MOVENTO S.A.C.
+            No CUENTA BANCARIA DE {companyData.companyName}
           </Text>
           <Text style={styles.termsInfo}>
             {[

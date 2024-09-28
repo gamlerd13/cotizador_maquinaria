@@ -3,6 +3,7 @@ import React from "react";
 import LoginForm from "./LoginForm";
 
 import { Card, CardHeader, CardBody, Divider, Image } from "@nextui-org/react";
+import { companyData } from "@/constant/companyData";
 
 export default function App() {
   return (
@@ -32,20 +33,19 @@ export default function App() {
           </div>
         </div>
         <Card className="w-full lg:w-1/2 p-4">
-          <CardHeader className="flex gap-3">
+          <CardHeader className="flex flex-col">
             <div>
               <Image
                 alt="logo"
                 isBlurred
-                height={40}
                 radius="sm"
                 src="/logo.png"
-                width={40}
+                width={200}
               />
             </div>
 
             <div className="flex flex-col">
-              <p className="text-md">Movento S.A.C</p>
+              <p className="text-md">{companyData.companyName}</p>
               <p className="text-small text-default-500">Login</p>
             </div>
           </CardHeader>
