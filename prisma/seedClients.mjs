@@ -1,7 +1,7 @@
 import { PrismaClient, UnitOfMeasure } from "@prisma/client";
 const prisma = new PrismaClient();
 
-const clients = [
+export const clients = [
   {
     name: "Juan Pérez",
     contact: "juan.perez@example.com",

@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 
 import { hash } from "bcrypt-ts";
+import { clients } from "./seedClients.mjs";
+import { items } from "./seedITems.mjs";
 
 const prisma = new PrismaClient();
 
@@ -11,24 +13,16 @@ const users = [
     password: "admin",
   },
   {
-    username: "Alice Smith",
-    email: "alice.smith@example.com",
-    password: "555-1234",
-  },
-];
-
-const subs = [
-  {
-    fullname: "Eduardo Jimenez",
-    email: "eduardo.jimenez@example.com",
-    phone: "+5112345679",
-    endDate: "2024-10-05T00:00:00Z",
-    status: "ACTIVE",
-    description: "Subscription to webinar platform.",
+    username: "kedevs",
+    email: "kedevs@example.com",
+    password: "kedevs",
   },
 ];
 
 async function main() {
+  const userDB = await prisma.user.count();
+  if (userDB != 0) return console.log("Ya tiene usuario creado");
+
   const listUsers = await Promise.all(
     users.map(async (user) => ({
       ...user,
@@ -41,7 +35,17 @@ async function main() {
     skipDuplicates: true,
   });
 
-  console.log(user);
+  const client = await prisma.client.createMany({
+    data: clients,
+    skipDuplicates: true,
+  });
+
+  const item = await prisma.item.createMany({
+    data: items,
+    skipDuplicates: true,
+  });
+
+  console.log({ user }, { client }, { item });
 }
 
 main()
