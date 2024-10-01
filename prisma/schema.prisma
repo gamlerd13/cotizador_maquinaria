@@ -46,6 +46,17 @@ enum CotizacionStatus {
   ESTADO6
 }
 
+enum Currency {
+  SOLES
+  DOLARES
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  DISCONTINUED
+}
+
 model Client {
   id         Int          @id @default(autoincrement())
   name       String
@@ -63,6 +74,7 @@ model Cotizacion {
   parentCode                  String
   clientId                    Int?
   client                      Client?          @relation(fields: [clientId], references: [id])
+  currency                    Currency         @default(SOLES)
   unregisteredClientName      String?
   unregisteredClientContact   String?
   unregisteredClientReference String?
@@ -82,7 +94,6 @@ model Cotizacion {
   cotizacionItem CotizacionItem[]
 }
 
-//Relation cotizacion with
 model CotizacionItem {
   id         Int        @id @default(autoincrement())
   item       Item       @relation(fields: [itemId], references: [id])
@@ -111,17 +122,17 @@ enum UnitOfMeasure {
 }
 
 model Item {
-  id              Int              @id @default(autoincrement())
-  name            String
-  brand           String           @default("")
-  description     String           @default("")
-  comment         String           @default("")
-  manufactureCode String           @default("")
-  weight          Float
-  unitPrice       Float
-  code            String           @unique
-  unitMeasure     UnitOfMeasure    @default(UNIT)
-  CotizacionItem  CotizacionItem[]
+  id             Int              @id @default(autoincrement())
+  name           String
+  brand          String           @default("")
+  description    String           @default("")
+  partNumber     String           @default("")
+  weight         Float
+  unitPrice      Float
+  code           String           @unique
+  unitMeasure    UnitOfMeasure    @default(UNIT)
+  status         ProductStatus    @default(ACTIVE)
+  CotizacionItem CotizacionItem[]
 }
 
 model LastCodeCotizacion {

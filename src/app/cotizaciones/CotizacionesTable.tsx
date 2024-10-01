@@ -1,5 +1,5 @@
 // react
-import { useState } from "react";
+import React, { useState } from "react";
 
 // ui components
 import {
@@ -32,6 +32,7 @@ import { useRouter } from "next/navigation";
 // types
 import {
   CotizacionClientGet,
+  CurrencySymbol,
   statusColors,
   statusLabels,
 } from "@/models/cotizacion";
@@ -120,7 +121,9 @@ function CotizacionesTable({
                   {statusLabels[cotizacion.status]}
                 </Chip>
               </TableCell>
-              <TableCell>$. {cotizacion.totalPrice}</TableCell>
+              <TableCell>
+                {CurrencySymbol[cotizacion.currency]} {cotizacion.totalPrice}
+              </TableCell>
 
               <TableCell>
                 <DropdownAcciones

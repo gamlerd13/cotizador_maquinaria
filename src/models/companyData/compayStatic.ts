@@ -1,5 +1,6 @@
 export interface CompanyData {
   companyName: string;
+  companyNameLong: string;
   location: string;
   ruc: number;
   phoneNumber: string[] | null;

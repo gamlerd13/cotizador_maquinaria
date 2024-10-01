@@ -60,7 +60,7 @@ export default function NavBar() {
         <Link color="foreground" href="/">
           <NavbarBrand>
             {/* <AcmeLogo /> */}
-            <Image alt="logo" height={40} src="/logo.png" width={150} />
+            <Image alt="logo" height={40} src="/logo.jpeg" width={80} />
             <p className="font-bold text-inherit">{companyData.companyName}</p>
           </NavbarBrand>
         </Link>

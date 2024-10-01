@@ -4,7 +4,13 @@ import React, { useRef, useState } from "react";
 
 // ui componets
 import { Input, Textarea } from "@nextui-org/input";
-import { Checkbox, DatePicker, DateValue } from "@nextui-org/react";
+import {
+  Checkbox,
+  DatePicker,
+  DateValue,
+  Select,
+  SelectItem,
+} from "@nextui-org/react";
 
 //components
 import ProductItem from "./ProductItem";
@@ -37,15 +43,14 @@ import { IGV } from "@/constant/finance";
 import { Client } from "@/models/client";
 import { ItemGet } from "@/models/items";
 import {
-  CotizacionClientGet,
   CotizacionClientItemsGet,
-  CotizacionFormDataPost,
   CotizacionFormDataPut,
   UnregisteredClientForm,
 } from "@/models/cotizacion";
 import { toast } from "sonner";
 import useDinamicItems from "../hooks/useDinamicItems";
 import { useLastCodeCotizacion } from "@/app/hooks/cotizacion/useLastCodeCotizacion";
+import { Currency } from "prisma/prisma-client";
 
 interface CotizacionValue {
   clientId: number | null;
@@ -58,6 +63,7 @@ interface CotizacionValue {
   offerValidity: string;
   generalCondicion: string;
   comments: string;
+  currency: Currency;
   totalPrice: number;
   isEdit: boolean;
   includeIgv: boolean;
@@ -75,7 +81,6 @@ function CotizarFormV2({
 }: {
   cotizacion: CotizacionClientItemsGet;
 }) {
-  console.log(cotizacion);
   const { dinamicItems, addItem, setDinamicItems, updateItem, removeItem } =
     useDinamicItems(cotizacion.cotizacionItem);
   const { updateCotizacion } = usePutCotizacion();
@@ -98,6 +103,7 @@ function CotizarFormV2({
   const [cotizacionValues, setCotizacionValues] = useState<CotizacionValue>({
     clientId: cotizacion.clientId || null,
     code: cotizacion.code,
+    currency: cotizacion.currency,
     parentCode: cotizacion.parentCode,
     date: parseAbsoluteToLocal(cotizacion.date),
     deliverTime: cotizacion.deliverTime,
@@ -110,7 +116,7 @@ function CotizarFormV2({
     isEdit: true,
     includeIgv: cotizacion.includeIgv,
   });
-
+  console.log(cotizacionValues);
   const {
     items: productsSearch,
     getItems: getProductsSearch,
@@ -344,12 +350,31 @@ function CotizarFormV2({
               </span>
             </div>
           </div>
-          <ItemSelectV2
-            itemList={productsSearch}
-            handleSelect={handleSelectItemSelect}
-            handleInputChange={handleInputChange}
-            isLoading={isLoadingProductsSearch}
-          />
+
+          <div className="flex gap-x-2">
+            <select
+              className="text-sm block w-52 px-3 py-2 border border-gray-300 rounded-md text-gray-700 bg-gray-100 focus:outline-none focus:ring focus:ring-blue-500"
+              onChange={(e) =>
+                setCotizacionValues((prevValues) => ({
+                  ...prevValues,
+                  currency: e.target.value as Currency,
+                }))
+              }
+              value={cotizacionValues.currency}
+            >
+              {Object.values(Currency).map((currency) => (
+                <option key={currency} value={currency}>
+                  {currency}
+                </option>
+              ))}
+            </select>
+            <ItemSelectV2
+              itemList={productsSearch}
+              handleSelect={handleSelectItemSelect}
+              handleInputChange={handleInputChange}
+              isLoading={isLoadingProductsSearch}
+            />
+          </div>
         </div>
 
         <div className="w-full pt-4">

@@ -1,45 +1,46 @@
 import { BankAccount, CompanyData } from "@/models/companyData/compayStatic";
 
 export const companyData: CompanyData = {
-  companyName: "VORAZ DEL PERU SAC",
-  location: "AV.MARISCAL NIETO N°326, URB.",
-  ruc: 20498189394,
+  companyName: "ADIEL S.J.",
+  companyNameLong: "ADIEL S.J. PARTS SOLUTIONS S.A.C",
+  location: "JR. MIRAMAR MZA. C LOTE. S/N MOQUEGUA - ILO - ILO",
+  ruc: 20613144731,
   phoneNumber: null,
   email: null,
 };
 
 export const bankAccounts: BankAccount[] = [
+  // {
+  //   id: 2,
+  //   bankName: "BBVA",
+  //   accounts: [
+  //     {
+  //       name: "BBVA SOLES",
+  //       currencySymbol: "S/.",
+  //       creditCardnumber: "",
+  //     },
+  //     {
+  //       name: "BBVA DOLARES",
+  //       currencySymbol: "$/.",
+  //       creditCardnumber: "",
+  //     },
+  //   ],
+  // },
   {
     id: 1,
-    bankName: "BBVA",
-    accounts: [
-      {
-        name: "BBVA SOLES",
-        currencySymbol: "S/.",
-        creditCardnumber: "0011-0226-0100007885-85",
-      },
-      {
-        name: "BBVA DOLARES",
-        currencySymbol: "$/.",
-        creditCardnumber: "0011-0226-0100007877-82",
-      },
-    ],
-  },
-  {
-    id: 2,
     bankName: "BCP",
     accounts: [
       {
         name: "BCP SOLES",
         currencySymbol: "S/.",
 
-        creditCardnumber: "215-2528208-0-70",
+        creditCardnumber: "3857066249038",
       },
       {
-        name: "BCP DOLARES",
-        currencySymbol: "$/.",
+        name: "BCP SOLES CCI",
+        currencySymbol: "S/.",
 
-        creditCardnumber: "215-2481537-1-55",
+        creditCardnumber: "00238500706624903835",
       },
     ],
   },

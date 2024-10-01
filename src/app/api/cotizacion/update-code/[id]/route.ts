@@ -39,6 +39,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
       totalPrice,
       isEdit,
       includeIgv,
+      currency,
       items,
     } = body;
 
@@ -65,6 +66,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
       totalPrice,
       isEdit,
       includeIgv,
+      currency,
       code: newCode,
       clientId: clientId ? clientId : null,
       unregisteredClientName: clientId ? null : unregisteredClientName,

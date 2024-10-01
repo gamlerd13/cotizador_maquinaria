@@ -1,5 +1,6 @@
 "use client";
-import { Button } from "@nextui-org/button";
+import React from "react";
+
 import {
   Table,
   TableBody,
@@ -14,12 +15,11 @@ import {
   ModalReasonProps,
   UseItemsProp,
 } from "./interfaces/common";
-import { Input, Spinner } from "@nextui-org/react";
+import { Spinner } from "@nextui-org/react";
 import { DropdownAcciones } from "./DropdownAcciones";
 import ModalItem from "./modal/ModalItem";
 import { useDisclosure } from "@nextui-org/react";
 import { ItemGet } from "@/models/items";
-import { PiPlusCircleDuotone } from "react-icons/pi";
 import { InputSearch } from "@/components/InputSearch";
 import { ButtonCreateInstance } from "@/components/Button";
 
@@ -49,7 +49,7 @@ function ItemTable({ useItems }: { useItems: Omit<UseItemsProp, "getItems"> }) {
       );
       const filteredAlumnos = useItems.items.filter((product) => {
         const columnsRawFilter =
-          `${product.name} ${product.code} ${product.manufactureCode} ${product.brand} ${product.description} ${product.unitMeasure}`.toLowerCase();
+          `${product.name} ${product.code} ${product.partNumber} ${product.brand} ${product.description} ${product.unitMeasure}`.toLowerCase();
         return removeAccents(columnsRawFilter).includes(normalizedSearchFilter);
       });
       // return filteredAlumnos.slice(start, end);
@@ -105,9 +105,8 @@ function ItemTable({ useItems }: { useItems: Omit<UseItemsProp, "getItems"> }) {
         <TableHeader>
           <TableColumn>Numero</TableColumn>
           <TableColumn>Nombre</TableColumn>
-          <TableColumn>Descripción</TableColumn>
           <TableColumn>Código</TableColumn>
-          <TableColumn>Código Fabricante</TableColumn>
+          <TableColumn>Numero de Parte</TableColumn>
           <TableColumn>Marca</TableColumn>
           <TableColumn>Peso</TableColumn>
           <TableColumn>Unidad de Medida</TableColumn>
@@ -125,13 +124,12 @@ function ItemTable({ useItems }: { useItems: Omit<UseItemsProp, "getItems"> }) {
             <TableRow key={item.id}>
               <TableCell>{item.id}</TableCell>
               <TableCell>{item.name}</TableCell>
-              <TableCell>{item.description}</TableCell>
               <TableCell>{item.code}</TableCell>
-              <TableCell>{item.manufactureCode}</TableCell>
+              <TableCell>{item.partNumber}</TableCell>
               <TableCell>{item.brand}</TableCell>
               <TableCell>{item.weight}</TableCell>
               <TableCell>{item.unitMeasure}</TableCell>
-              <TableCell>$/. {item.unitPrice}</TableCell>
+              <TableCell>{item.unitPrice.toFixed(2)}</TableCell>
 
               <TableCell>
                 <DropdownAcciones

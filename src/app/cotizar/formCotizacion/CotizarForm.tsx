@@ -36,6 +36,7 @@ import {
   UnregisteredClientForm,
 } from "@/models/cotizacion";
 import { toast } from "sonner";
+import { Currency } from "prisma/prisma-client";
 
 interface CotizacionValue {
   clientId: number | null;
@@ -46,6 +47,7 @@ interface CotizacionValue {
   offerValidity: string;
   generalCondicion: string;
   comments: string;
+  currency: Currency;
   totalPrice: number;
   isEdit: boolean;
   includeIgv: boolean;
@@ -69,6 +71,7 @@ function CotizarForm() {
   const [cotizacionValues, setCotizacionValues] = useState<CotizacionValue>({
     clientId: null,
     date: now(getLocalTimeZone()),
+    currency: Currency.SOLES,
     deliverTime: "",
     paymentCondition: "",
     deliverPlace: "",
@@ -309,12 +312,30 @@ function CotizarForm() {
               </span>
             </div>
           </div>
-          <ItemSelect
-            itemList={productsSearch}
-            handleSelect={handleSelectItemSelect}
-            handleInputChange={handleInputChange}
-            isLoading={isLoadingProductsSearch}
-          />
+          <div className="flex gap-x-2">
+            <select
+              className="text-sm block w-52 px-3 py-2 border border-gray-300 rounded-md text-gray-700 bg-gray-100 focus:outline-none focus:ring focus:ring-blue-500"
+              onChange={(e) =>
+                setCotizacionValues((prevValues) => ({
+                  ...prevValues,
+                  currency: e.target.value as Currency,
+                }))
+              }
+              value={cotizacionValues.currency}
+            >
+              {Object.values(Currency).map((currency) => (
+                <option key={currency} value={currency}>
+                  {currency}
+                </option>
+              ))}
+            </select>
+            <ItemSelect
+              itemList={productsSearch}
+              handleSelect={handleSelectItemSelect}
+              handleInputChange={handleInputChange}
+              isLoading={isLoadingProductsSearch}
+            />
+          </div>
         </div>
 
         <div className="w-full pt-4">

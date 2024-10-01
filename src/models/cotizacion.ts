@@ -1,4 +1,4 @@
-import { CotizacionStatus } from "@prisma/client";
+import { CotizacionStatus, Currency } from "@prisma/client";
 import { Client, ClientCreate } from "./client";
 import { CotizacionItemItemGet, ItemGet } from "./items";
 
@@ -17,6 +17,7 @@ export interface CotizacionBase {
   generalCondicion: string;
   comments: string;
   totalPrice: number;
+  currency: Currency;
   isEdit: boolean;
   includeIgv: boolean;
   unregisteredClientName: string;
@@ -43,6 +44,7 @@ export type CotizacionFormDataPost = {
   comments: string;
   totalPrice: number;
   isEdit: boolean;
+  currency: Currency;
   includeIgv: boolean;
   items: DinamicFrontendItemItemPost[];
   // Unregister client
@@ -196,3 +198,8 @@ export const InitialCodeCotizacionChild = [
   "Y",
   "Z",
 ];
+
+export const CurrencySymbol: { [key in Currency]: string } = {
+  [Currency.SOLES]: "S/.",
+  [Currency.DOLARES]: "$.",
+};

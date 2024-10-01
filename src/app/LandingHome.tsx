@@ -52,9 +52,9 @@ export default function LandingHome() {
   return (
     <Card className="w-full">
       <CardHeader className="flex gap-3">
-        <Image alt="/logo" radius="sm" src="/logo.png" width={200} />
+        <Image alt="/logo" radius="sm" src="/logo.jpeg" width={150} />
         <div className="flex flex-col">
-          <p className="text-md">{companyData.companyName}</p>
+          <p className="text-md">{companyData.companyNameLong}</p>
           <p className="text-small text-default-500">Sistema de cotización</p>
         </div>
       </CardHeader>

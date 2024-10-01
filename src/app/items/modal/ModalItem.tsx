@@ -68,8 +68,7 @@ function ModalItem({
       unitPrice: parseFloat(
         parseFloat(formData.get("unitPrice")?.toString() || "0").toFixed(2)
       ),
-      manufactureCode: formData.get("manufactureCode")?.toString() || "",
-      comment: formData.get("comment")?.toString() || "",
+      partNumber: formData.get("partNumber")?.toString() || "",
       brand: formData.get("brand")?.toString() || "",
       code: formData.get("code")?.toString() || "",
     };
@@ -198,9 +197,9 @@ function FormItem({
           size="sm"
           className="md:col-span-1"
           type="text"
-          name="manufactureCode"
-          defaultValue={initialData?.manufactureCode}
-          label="Código Frabricante"
+          name="partNumber"
+          defaultValue={initialData?.partNumber}
+          label="Numero de Parte"
         />
         <Select
           label="Unidad de Medida"
@@ -234,17 +233,6 @@ function FormItem({
           //   defaultValue={initialData?.weight.toString()}
           defaultValue={weight}
           label="Peso (KLgr)"
-        />
-      </div>
-
-      <div className="w-full">
-        <Input
-          size="sm"
-          className="md:col-span-1"
-          type="text"
-          name="comment"
-          defaultValue={initialData?.comment}
-          label="Comentario"
         />
       </div>
 

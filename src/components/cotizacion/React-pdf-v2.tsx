@@ -14,10 +14,12 @@ import {
   CotizacionClientGet,
   CotizacionClientItemsGet,
   CotizacionGet,
+  CurrencySymbol,
 } from "@/models/cotizacion";
 import { getDateHour } from "@/lib/main";
 import { table } from "console";
 import { bankAccounts, companyData } from "@/constant/companyData";
+import { IGV } from "@/constant/finance";
 
 Font.register({
   family: "Roboto",
@@ -34,7 +36,6 @@ const ReactPdfComponentV2 = ({
 }) => {
   const {
     client,
-
     unregisteredClientName,
     unregisteredClientContact,
     unregisteredClientReference,
@@ -48,6 +49,7 @@ const ReactPdfComponentV2 = ({
     generalCondicion,
     comments,
     totalPrice,
+    currency,
     includeIgv,
     cotizacionItem,
   } = cotizacion;
@@ -64,6 +66,18 @@ const ReactPdfComponentV2 = ({
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+
+  const formattedTotalPriceNoIncludedIgv = includeIgv
+    ? (totalPrice * (100 / (100 + IGV))).toFixed(2)
+    : formattedTotalPrice;
+
+  const formattedTotalPriceIgv = includeIgv
+    ? (totalPrice - totalPrice * (100 / (100 + IGV))).toFixed(2)
+    : (totalPrice * (IGV / 100)).toFixed(2);
+  const formattedTotalPriceIncludeIgv = includeIgv
+    ? formattedTotalPrice
+    : (totalPrice + totalPrice * (IGV / 100)).toFixed(2);
+
   const itemsFormatted = cotizacionItem.map((item) => ({
     ...item,
     unitPrice: item.unitPrice.toLocaleString("es-PE", {
@@ -84,8 +98,23 @@ const ReactPdfComponentV2 = ({
         <View
           style={[{ flexDirection: "row", justifyContent: "space-between" }]}
         >
-          <View style={{ flex: 2, paddingHorizontal: 8 }}>
-            <Image src="/logov1.jpeg" style={{ width: 165 }} />
+          <View style={{ flex: 3, paddingHorizontal: 8 }}>
+            <View style={{ paddingHorizontal: 4, flexDirection: "row" }}>
+              <View style={{ flex: 1 }}>
+                <Image src="/logov4.jpeg" style={{ width: 50 }} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Image src="/logov2.jpeg" style={{ width: 50 }} />
+              </View>
+
+              <View style={{ flex: 1 }}>
+                <Image src="/logov3.jpeg" style={{ width: 50 }} />
+              </View>
+
+              <View style={{ flex: 1 }}>
+                <Image src="/logov1.jpeg" style={{ width: 150 }} />
+              </View>
+            </View>
             <View style={[{ paddingVertical: 16 }]}>
               <Text style={[styles.boldText]}>{companyData.companyName}</Text>
               <Text style={[styles.boldText]}>{companyData.location}</Text>
@@ -99,17 +128,9 @@ const ReactPdfComponentV2 = ({
               <Text>Teléfono/Fax: {clientData.contact}</Text>
             </View>
           </View>
-          <View style={{ flex: 3, paddingHorizontal: 8, flexDirection: "row" }}>
-            <View style={{ flex: 1 }}>
-              <Image src="/logov2.jpeg" style={{ width: 90 }} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Image src="/logov4.jpeg" style={{ width: 90 }} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Image src="/logov3.jpeg" style={{ width: 90 }} />
-            </View>
-          </View>
+          <View
+            style={{ flex: 2, paddingHorizontal: 8, flexDirection: "row" }}
+          ></View>
           <View style={[{ flex: 3, paddingHorizontal: 8, width: "100%" }]}>
             <View style={[{ paddingHorizontal: "8px", width: "100%" }]}>
               <Text style={[{ fontSize: 14, fontWeight: 700 }]}>
@@ -159,7 +180,7 @@ const ReactPdfComponentV2 = ({
                   <View style={stylesTable.tableCol}>
                     <Text style={stylesTable.tableCell}>
                       Generar orden de compra a:{"\n"}
-                      <Text>{companyData.companyName}</Text>
+                      <Text>{companyData.companyNameLong}</Text>
                       {"\n"}
                       <Text>R.U.C {companyData.ruc}</Text>
                     </Text>
@@ -179,10 +200,7 @@ const ReactPdfComponentV2 = ({
             </Text>
             <Text style={[styles.tableCell, { flex: 1 }]}>Código Art.</Text>
             <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
-              Código Fab.
-            </Text>
-            <Text style={[styles.tableCell, styles.cellFlex, { flex: 3 }]}>
-              Obs.
+              Numero de Parte.
             </Text>
             <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
               Cantidad
@@ -200,10 +218,10 @@ const ReactPdfComponentV2 = ({
               Peso Kg.
             </Text>
             <Text style={[styles.tableCell, styles.cellFlex, { flex: 2 }]}>
-              Precio unitario US$
+              Precio unitario {CurrencySymbol[currency]}
             </Text>
             <Text style={[styles.tableCell, styles.cellFlex, { flex: 2 }]}>
-              Precio venta US$
+              Precio venta {CurrencySymbol[currency]}
             </Text>
           </View>
           {itemsFormatted.map((item, index) => (
@@ -215,11 +233,9 @@ const ReactPdfComponentV2 = ({
                 {item.item.code}
               </Text>
               <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
-                {item.item.manufactureCode}
+                {item.item.partNumber}
               </Text>
-              <Text style={[styles.tableCell, styles.cellFlex, { flex: 3 }]}>
-                {item.item.comment}
-              </Text>
+
               <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
                 {item.amount}
               </Text>
@@ -248,10 +264,50 @@ const ReactPdfComponentV2 = ({
         {/* Other */}
 
         <View style={styles.totalPrice}>
-          <Text style={styles.cellTotalPrice}>
-            VALOR DE VENTA TOTAL ({includeIgv ? "SÍ" : "NO"}) Incluye I.G.V
-          </Text>
-          <Text style={styles.cellTotalPrice}> S/. {formattedTotalPrice}</Text>
+          <View style={{ flexDirection: "column" }}>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  fontWeight: "normal",
+                },
+              ]}
+            >
+              <Text style={[styles.cellTotalPrice]}>Modeda</Text>
+              <Text style={[styles.cellTotalPrice]}>
+                {currency} {CurrencySymbol[currency]}
+              </Text>
+            </View>
+            <View
+              style={[
+                { flexDirection: "row", justifyContent: "space-between" },
+              ]}
+            >
+              <Text style={[styles.cellTotalPrice]}>VALOR DE VENTA</Text>
+              <Text style={[styles.cellTotalPrice]}>
+                {formattedTotalPriceNoIncludedIgv}
+              </Text>
+            </View>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={[styles.cellTotalPrice]}>
+                IGV ({IGV.toString()}) %
+              </Text>
+              <Text style={[styles.cellTotalPrice]}>
+                {formattedTotalPriceIgv}
+              </Text>
+            </View>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={[styles.cellTotalPrice]}>TOTAL VENTA</Text>
+              <Text style={[styles.cellTotalPrice]}>
+                {formattedTotalPriceIncludeIgv}
+              </Text>
+            </View>
+          </View>
         </View>
 
         <View style={{ flexDirection: "row" }}>
@@ -462,6 +518,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#000",
     paddingBottom: 5,
+    fontSize: 9,
   },
   cellTotalPrice: {
     paddingLeft: 15,
