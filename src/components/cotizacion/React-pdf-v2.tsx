@@ -101,18 +101,7 @@ const ReactPdfComponentV2 = ({
           <View style={{ flex: 3, paddingHorizontal: 8 }}>
             <View style={{ paddingHorizontal: 4, flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
-                <Image src="/logov4.jpeg" style={{ width: 50 }} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Image src="/logov2.jpeg" style={{ width: 50 }} />
-              </View>
-
-              <View style={{ flex: 1 }}>
-                <Image src="/logov3.jpeg" style={{ width: 50 }} />
-              </View>
-
-              <View style={{ flex: 1 }}>
-                <Image src="/logov1.jpeg" style={{ width: 150 }} />
+                <Image src="/logov4.jpeg" style={{ width: 90 }} />
               </View>
             </View>
             <View style={[{ paddingVertical: 16 }]}>
@@ -131,8 +120,21 @@ const ReactPdfComponentV2 = ({
             </View>
           </View>
           <View
-            style={{ flex: 2, paddingHorizontal: 8, flexDirection: "row" }}
-          ></View>
+            style={{ flex: 2, paddingHorizontal: 8, flexDirection: "column" }}
+          >
+            <View style={{ flexDirection: "row" }}>
+              <View style={{ flex: 1 }}>
+                <Image src="/logov2.jpeg" style={{ width: 80 }} />
+              </View>
+
+              <View style={{ flex: 1, paddingTop: 4 }}>
+                <Image src="/logov3.jpeg" style={{ width: 70 }} />
+              </View>
+            </View>
+            <View style={{ flex: 1, paddingTop: 16 }}>
+              <Image src="/logov1.jpeg" style={{ width: 150 }} />
+            </View>
+          </View>
           <View style={[{ flex: 3, paddingHorizontal: 8, width: "100%" }]}>
             <View style={[{ paddingHorizontal: "8px", width: "100%" }]}>
               <Text style={[{ fontSize: 14, fontWeight: 700 }]}>
