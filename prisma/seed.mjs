@@ -21,7 +21,7 @@ const users = [
 
 async function main() {
   const userDB = await prisma.user.count();
-  if (userDB != 0) return console.log("Ya tiene usuario creado");
+  if (userDB != 0) return console.log("!!Ya tiene usuario creado");
 
   const listUsers = await Promise.all(
     users.map(async (user) => ({

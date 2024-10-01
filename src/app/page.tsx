@@ -4,6 +4,7 @@ import NavBar from "@/components/NavBar";
 import LandingHome from "./LandingHome";
 import TitlePage from "@/components/TitlePage";
 import Footer from "@/components/Footer";
+import { SessionProvider } from "next-auth/react";
 
 export default function Home() {
   return (
@@ -13,7 +14,9 @@ export default function Home() {
         <div className="w-full flex justify-center">
           <div className="p-4 sm:w-9/12">
             <TitlePage title="Home" />
-            <LandingHome />
+            <SessionProvider>
+              <LandingHome />
+            </SessionProvider>
           </div>
         </div>
       </main>

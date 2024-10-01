@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   Card,
@@ -9,7 +10,7 @@ import {
   Image,
 } from "@nextui-org/react";
 import { companyData } from "@/constant/companyData";
-
+import { useSession } from "next-auth/react";
 interface Servicio {
   id: number;
   linkName: string;
@@ -18,6 +19,7 @@ interface Servicio {
 }
 
 export default function LandingHome() {
+  const { data: session, status } = useSession();
   const servicios: Servicio[] = [
     {
       id: 1,
@@ -56,6 +58,10 @@ export default function LandingHome() {
         <div className="flex flex-col">
           <p className="text-md">{companyData.companyNameLong}</p>
           <p className="text-small text-default-500">Sistema de cotización</p>
+          <p className="font-semibold">
+            Usuario:{" "}
+            <span className="text-amber-700">{session?.user?.name}</span>
+          </p>
         </div>
       </CardHeader>
       <Divider />
