@@ -116,7 +116,9 @@ const ReactPdfComponentV2 = ({
               </View>
             </View>
             <View style={[{ paddingVertical: 16 }]}>
-              <Text style={[styles.boldText]}>{companyData.companyName}</Text>
+              <Text style={[styles.boldText]}>
+                {companyData.companyNameLong}
+              </Text>
               <Text style={[styles.boldText]}>{companyData.location}</Text>
               <Text>R.U.C. {companyData.ruc}</Text>
             </View>

@@ -341,7 +341,7 @@ function CotizarFormV2({
       </div>
 
       <div className="w-full mt-4">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center gap-x-2">
           <div className="flex items-center justify-center h-full">
             <div className="font-medium text-slate-600">
               <h1>Productos</h1>
@@ -351,9 +351,9 @@ function CotizarFormV2({
             </div>
           </div>
 
-          <div className="flex gap-x-2">
+          <div className="gap-2 sm:flex-row flex flex-col">
             <select
-              className="text-sm block w-52 px-3 py-2 border border-gray-300 rounded-md text-gray-700 bg-gray-100 focus:outline-none focus:ring focus:ring-blue-500"
+              className="text-sm block px-3 py-2 border border-gray-300 rounded-md text-gray-700 bg-gray-100 focus:outline-none focus:ring focus:ring-blue-500"
               onChange={(e) =>
                 setCotizacionValues((prevValues) => ({
                   ...prevValues,
