@@ -35,3 +35,15 @@ export type SearchItemProps = {
   isLoading: boolean;
   getItems: (search: string) => void;
 };
+
+export const UnitOfMeasureES: { [key in UnitOfMeasure]: string } = {
+  [UnitOfMeasure.BOX]: "CAJA",
+  [UnitOfMeasure.CENTIMETER]: "CENTIMETRO",
+  [UnitOfMeasure.GRAM]: "GRAMO",
+  [UnitOfMeasure.KILOGRAM]: "KILOGRAMO",
+  [UnitOfMeasure.UNIT]: "UNIDAD",
+  [UnitOfMeasure.LITER]: "LITRO",
+  [UnitOfMeasure.METER]: "METRO",
+  [UnitOfMeasure.PIECE]: "PIEZA",
+  [UnitOfMeasure.MILLILITER]: "MILILITRO",
+};

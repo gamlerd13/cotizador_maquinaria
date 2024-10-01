@@ -20,6 +20,7 @@ import { getDateHour } from "@/lib/main";
 import { table } from "console";
 import { bankAccounts, companyData } from "@/constant/companyData";
 import { IGV } from "@/constant/finance";
+import { UnitOfMeasureES } from "@/models/items";
 
 Font.register({
   family: "Roboto",
@@ -98,10 +99,13 @@ const ReactPdfComponentV2 = ({
         <View
           style={[{ flexDirection: "row", justifyContent: "space-between" }]}
         >
-          <View style={{ flex: 3, paddingHorizontal: 8 }}>
+          <View style={{ flex: 4, paddingHorizontal: 8 }}>
             <View style={{ paddingHorizontal: 4, flexDirection: "row" }}>
-              <View style={{ flex: 1 }}>
-                <Image src="/logov4.jpeg" style={{ width: 90 }} />
+              <View>
+                <Image src="/logov4.jpeg" style={{ width: 120 }} />
+              </View>
+              <View style={{ paddingLeft: 100 }}>
+                <Image src="/logos-company.jpeg" style={{ width: 150 }} />
               </View>
             </View>
             <View style={[{ paddingVertical: 16 }]}>
@@ -116,8 +120,8 @@ const ReactPdfComponentV2 = ({
                   },
                 ]}
               >
-                DISTRIBUIDOR DE REPUESTOS PARA JHON DEERE - KOMATSU - CAT - CASE
-                - DOOSAN
+                ADIEL S.J. PARTS SOLUTIONS S.A.C DISTRIBUIDOR DE REPUESTOS PARA
+                JHON DEERE - KOMATSU - CAT - CASE - DOOSAN
               </Text>
               <Text style={[styles.boldText]}>{companyData.location}</Text>
               <Text>R.U.C. {companyData.ruc}</Text>
@@ -131,22 +135,9 @@ const ReactPdfComponentV2 = ({
             </View>
           </View>
           <View
-            style={{ flex: 2, paddingHorizontal: 8, flexDirection: "column" }}
-          >
-            <View style={{ flexDirection: "row" }}>
-              <View style={{ flex: 1 }}>
-                <Image src="/logov2.jpeg" style={{ width: 80 }} />
-              </View>
-
-              <View style={{ flex: 1, paddingTop: 4 }}>
-                <Image src="/logov3.jpeg" style={{ width: 70 }} />
-              </View>
-            </View>
-            <View style={{ flex: 1, paddingTop: 16 }}>
-              <Image src="/logov1.jpeg" style={{ width: 150 }} />
-            </View>
-          </View>
-          <View style={[{ flex: 3, paddingHorizontal: 8, width: "100%" }]}>
+            style={{ flex: 1, paddingHorizontal: 8, flexDirection: "column" }}
+          ></View>
+          <View style={[{ flex: 2, paddingHorizontal: 8, width: "100%" }]}>
             <View style={[{ paddingHorizontal: "8px", width: "100%" }]}>
               <Text style={[{ fontSize: 14, fontWeight: 700 }]}>
                 COTIZACION Nº {code}
@@ -255,7 +246,7 @@ const ReactPdfComponentV2 = ({
                 {item.amount}
               </Text>
               <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
-                {item.item.unitMeasure}
+                {UnitOfMeasureES[item.item.unitMeasure]}
               </Text>
               <Text style={[styles.tableCell, styles.cellFlex, { flex: 6 }]}>
                 {item.item.name}

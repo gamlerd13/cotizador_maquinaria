@@ -19,7 +19,7 @@ import { Spinner } from "@nextui-org/react";
 import { DropdownAcciones } from "./DropdownAcciones";
 import ModalItem from "./modal/ModalItem";
 import { useDisclosure } from "@nextui-org/react";
-import { ItemGet } from "@/models/items";
+import { ItemGet, UnitOfMeasureES } from "@/models/items";
 import { InputSearch } from "@/components/InputSearch";
 import { ButtonCreateInstance } from "@/components/Button";
 
@@ -128,7 +128,7 @@ function ItemTable({ useItems }: { useItems: Omit<UseItemsProp, "getItems"> }) {
               <TableCell>{item.partNumber}</TableCell>
               <TableCell>{item.brand}</TableCell>
               <TableCell>{item.weight}</TableCell>
-              <TableCell>{item.unitMeasure}</TableCell>
+              <TableCell>{UnitOfMeasureES[item.unitMeasure]}</TableCell>
               <TableCell>{item.unitPrice.toFixed(2)}</TableCell>
 
               <TableCell>
