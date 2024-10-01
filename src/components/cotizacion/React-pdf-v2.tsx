@@ -109,15 +109,15 @@ const ReactPdfComponentV2 = ({
                 style={[
                   styles.boldText,
                   {
-                    color: "#3D3D3D",
+                    color: "#012030",
                     textAlign: "center",
-                    paddingHorizontal: 4,
+                    paddingHorizontal: 6,
                     paddingBottom: 4,
                   },
                 ]}
               >
-                ADIEL S.J. PARTS SOLUTIONS SAC DISTRIBUIDOR DE REPUESTOS PARA
-                JHON DEERE - KOMATSU - CAT - CASE - DOOSAN
+                DISTRIBUIDOR DE REPUESTOS PARA JHON DEERE - KOMATSU - CAT - CASE
+                - DOOSAN
               </Text>
               <Text style={[styles.boldText]}>{companyData.location}</Text>
               <Text>R.U.C. {companyData.ruc}</Text>
