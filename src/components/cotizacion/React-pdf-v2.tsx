@@ -99,13 +99,10 @@ const ReactPdfComponentV2 = ({
         <View
           style={[{ flexDirection: "row", justifyContent: "space-between" }]}
         >
-          <View style={{ flex: 4, paddingHorizontal: 8 }}>
+          <View style={{ flex: 3, paddingHorizontal: 8 }}>
             <View style={{ paddingHorizontal: 4, flexDirection: "row" }}>
               <View>
                 <Image src="/logov4.jpeg" style={{ width: 120 }} />
-              </View>
-              <View style={{ paddingLeft: 100 }}>
-                <Image src="/logos-company.jpeg" style={{ width: 150 }} />
               </View>
             </View>
             <View style={[{ paddingVertical: 16 }]}>
@@ -114,14 +111,11 @@ const ReactPdfComponentV2 = ({
                   styles.boldText,
                   {
                     color: "#012030",
-                    textAlign: "center",
-                    paddingHorizontal: 6,
                     paddingBottom: 4,
                   },
                 ]}
               >
-                ADIEL S.J. PARTS SOLUTIONS S.A.C DISTRIBUIDOR DE REPUESTOS PARA
-                JHON DEERE - KOMATSU - CAT - CASE - DOOSAN
+                ADIEL S.J. PARTS SOLUTIONS S.A.C
               </Text>
               <Text style={[styles.boldText]}>{companyData.location}</Text>
               <Text>R.U.C. {companyData.ruc}</Text>
@@ -135,8 +129,26 @@ const ReactPdfComponentV2 = ({
             </View>
           </View>
           <View
-            style={{ flex: 1, paddingHorizontal: 8, flexDirection: "column" }}
-          ></View>
+            style={{ flex: 2, paddingHorizontal: 8, flexDirection: "column" }}
+          >
+            <View style={{ flexDirection: "row", justifyContent: "center" }}>
+              <Image src="/logos-company.jpeg" style={{ width: 150 }} />
+            </View>
+            <Text
+              style={[
+                styles.boldText,
+                {
+                  color: "#012030",
+                  textAlign: "center",
+                  paddingHorizontal: 6,
+                  paddingVertical: 8,
+                },
+              ]}
+            >
+              DISTRIBUIDOR DE REPUESTOS PARA JHON DEERE - KOMATSU - CAT - CASE -
+              DOOSAN
+            </Text>
+          </View>
           <View style={[{ flex: 2, paddingHorizontal: 8, width: "100%" }]}>
             <View style={[{ paddingHorizontal: "8px", width: "100%" }]}>
               <Text style={[{ fontSize: 14, fontWeight: 700 }]}>
