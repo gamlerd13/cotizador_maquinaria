@@ -105,8 +105,19 @@ const ReactPdfComponentV2 = ({
               </View>
             </View>
             <View style={[{ paddingVertical: 16 }]}>
-              <Text style={[styles.boldText]}>
-                {companyData.companyNameLong}
+              <Text
+                style={[
+                  styles.boldText,
+                  {
+                    color: "#3D3D3D",
+                    textAlign: "center",
+                    paddingHorizontal: 4,
+                    paddingBottom: 4,
+                  },
+                ]}
+              >
+                ADIEL S.J. PARTS SOLUTIONS SAC DISTRIBUIDOR DE REPUESTOS PARA
+                JHON DEERE - KOMATSU - CAT - CASE - DOOSAN
               </Text>
               <Text style={[styles.boldText]}>{companyData.location}</Text>
               <Text>R.U.C. {companyData.ruc}</Text>
