@@ -3,7 +3,8 @@ import { BankAccount, CompanyData } from "@/models/companyData/compayStatic";
 export const companyData: CompanyData = {
   companyName: "ADIEL S.J.",
   companyNameLong: "ADIEL S.J. PARTS SOLUTIONS S.A.C",
-  location: "JR. MIRAMAR MZA. C LOTE. S/N MOQUEGUA - ILO - ILO",
+  location:
+    "CAL.6 U NRO. 05 A.H. NUEVO AMANECER LIMA -  LIMA - SAN MARTIN DE PORRES",
   ruc: 20613144731,
   phoneNumber: null,
   email: null,
