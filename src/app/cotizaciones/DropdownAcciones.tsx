@@ -6,7 +6,7 @@ import {
   Button,
 } from "@nextui-org/react";
 import { FaEdit, FaFilePdf } from "react-icons/fa";
-import { BiTrash } from "react-icons/bi";
+import { CiSettings } from "react-icons/ci";
 import { CotizacionClientGet } from "@/models/cotizacion";
 import ReactPdfComponentV2 from "@/components/cotizacion/React-pdf-v2";
 import { pdf } from "@react-pdf/renderer";
@@ -57,7 +57,7 @@ export function DropdownAcciones({
         <DropdownItem
           key="changeStatus"
           color="default"
-          startContent={<BiTrash />}
+          startContent={<CiSettings />}
           onClick={handleOpenFinalizarModal}
         >
           Cambiar estado
