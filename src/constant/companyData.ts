@@ -4,7 +4,7 @@ export const companyData: CompanyData = {
   companyName: "ADIEL S.J.",
   companyNameLong: "ADIEL S.J. PARTS SOLUTIONS S.A.C",
   location:
-    "CAL.6 U NRO. 05 A.H. NUEVO AMANECER LIMA -  LIMA - SAN MARTIN DE PORRES",
+    "CAL.6 U NRO. 05 A.H. NUEVO AMANECER LIMA - LIMA - SAN MARTIN DE PORRES",
   ruc: 20613144731,
   phoneNumber: null,
   email: null,

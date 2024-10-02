@@ -437,6 +437,7 @@ function CotizarFormV2({
           <Input
             size="sm"
             label="Plazo de Entrega"
+            className="z-0"
             placeholder="4-6 semanas"
             name="deliverTime"
             value={cotizacionValues.deliverTime}
@@ -452,6 +453,7 @@ function CotizarFormV2({
           <Input
             size="sm"
             label="Condición de Pago"
+            className="z-0"
             name="paymentCondition"
             placeholder="50% con la OC, 50% c. entrega"
             value={cotizacionValues.paymentCondition}
@@ -468,6 +470,7 @@ function CotizarFormV2({
           <Input
             size="sm"
             label="Lugar de Entrega"
+            className="z-0"
             name="deliverPlace"
             placeholder="Tienda principal"
             value={cotizacionValues.deliverPlace}
@@ -483,6 +486,7 @@ function CotizarFormV2({
           <Input
             size="sm"
             label="Validez de oferta"
+            className="z-0"
             name="offerValidity"
             placeholder="3 meses"
             value={cotizacionValues.offerValidity}
@@ -500,6 +504,7 @@ function CotizarFormV2({
           <Textarea
             size="sm"
             label="Condiciones Generales"
+            className="z-0"
             name="generalCondicion"
             placeholder="Agregar condiciones extras ..."
             value={cotizacionValues.generalCondicion}
@@ -516,6 +521,7 @@ function CotizarFormV2({
           <Textarea
             size="sm"
             label="Comentarios"
+            className="z-0"
             name="comments"
             placeholder="Agregar comentarios"
             value={cotizacionValues.comments}

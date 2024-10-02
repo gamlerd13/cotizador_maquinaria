@@ -398,6 +398,7 @@ function CotizarForm() {
             label="Plazo de Entrega"
             placeholder="4-6 semanas"
             name="deliverTime"
+            className="z-0"
             value={cotizacionValues.deliverTime}
             onChange={(e) =>
               setCotizacionValues((prev) => ({
@@ -411,6 +412,7 @@ function CotizarForm() {
           <Input
             size="sm"
             label="Condición de Pago"
+            className="z-0"
             name="paymentCondition"
             placeholder="50% con la OC, 50% c. entrega"
             value={cotizacionValues.paymentCondition}
@@ -428,6 +430,7 @@ function CotizarForm() {
             size="sm"
             label="Lugar de Entrega"
             name="deliverPlace"
+            className="z-0"
             placeholder="Tienda principal"
             value={cotizacionValues.deliverPlace}
             onChange={(e) =>
@@ -443,6 +446,7 @@ function CotizarForm() {
             size="sm"
             label="Validez de oferta"
             name="offerValidity"
+            className="z-0"
             placeholder="3 meses"
             value={cotizacionValues.offerValidity}
             onChange={(e) =>
@@ -460,6 +464,7 @@ function CotizarForm() {
             size="sm"
             label="Condiciones Generales"
             name="generalCondicion"
+            className="z-0"
             placeholder="Agregar condiciones extras ..."
             value={cotizacionValues.generalCondicion}
             onChange={(e) =>
@@ -475,6 +480,7 @@ function CotizarForm() {
           <Textarea
             size="sm"
             label="Comentarios"
+            className="z-0"
             name="comments"
             placeholder="Agregar comentarios"
             value={cotizacionValues.comments}

@@ -2,6 +2,8 @@ import prisma from "@/libs/db";
 import { ItemPost } from "@/models/items";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     // get all items(products)
@@ -13,7 +15,7 @@ export async function GET(req: NextRequest) {
       where: {
         OR: [
           { name: { contains: query, mode: "insensitive" } }, // Búsqueda por nombre
-          { description: { contains: query, mode: "insensitive" } }, // Búsqueda por descripción
+          { code: { contains: query, mode: "insensitive" } }, // Búsqueda por descripción
         ],
       },
       orderBy: {
@@ -26,4 +28,3 @@ export async function GET(req: NextRequest) {
     return NextResponse.error();
   }
 }
-export const dynamic = "force-dynamic";

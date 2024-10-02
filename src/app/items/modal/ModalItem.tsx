@@ -10,7 +10,7 @@ import {
 import { Chip, Input, Select, SelectItem } from "@nextui-org/react";
 import { ModalReasonProps, UseItemsProp } from "../interfaces/common";
 import { UnitOfMeasure } from "prisma/prisma-client";
-import { ItemGet, ItemPost } from "@/models/items";
+import { ItemGet, ItemPost, UnitOfMeasureES } from "@/models/items";
 
 interface ModalItemProps {
   modalProps: {
@@ -209,7 +209,7 @@ function FormItem({
         >
           {Object.values(UnitOfMeasure).map((unitMeasure) => (
             <SelectItem key={unitMeasure} value={unitMeasure}>
-              {unitMeasure}
+              {UnitOfMeasureES[unitMeasure]}
             </SelectItem>
           ))}
         </Select>
