@@ -4,7 +4,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 
 // ui componets
 import { Input, Textarea } from "@nextui-org/input";
-import { Checkbox, DatePicker, DateValue } from "@nextui-org/react";
+import { Button, Checkbox, DatePicker, DateValue } from "@nextui-org/react";
 
 //components
 import ProductItem from "./ProductItem";
@@ -33,6 +33,7 @@ import { ItemGet } from "@/models/items";
 import {
   CotizacionFormDataPost,
   CotizacionFormDataPut,
+  CurrencySymbol,
   UnregisteredClientForm,
 } from "@/models/cotizacion";
 import { toast } from "sonner";
@@ -377,7 +378,9 @@ function CotizarForm() {
               label="Precio de Venta Total"
               type="number"
               name="totalPrice"
-              startContent={<span>$. </span>}
+              startContent={
+                <span>{CurrencySymbol[cotizacionValues.currency]} </span>
+              }
               // value={totalPrice}
               value={
                 cotizacionValues.includeIgv

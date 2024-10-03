@@ -41,7 +41,12 @@ export default function useDinamicItems(
 
     setDinamicItems((prevItem) => [
       ...prevItem,
-      { key: nextKeyItem, item: itemProduct, ...initialItemValues },
+      {
+        key: nextKeyItem,
+        item: itemProduct,
+        ...initialItemValues,
+        unitPrice: itemProduct.unitPrice,
+      },
     ]);
     setNextKeyItem((prevKey) => prevKey + 1);
   };

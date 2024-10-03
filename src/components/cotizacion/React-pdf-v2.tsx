@@ -190,7 +190,7 @@ const ReactPdfComponentV2 = ({
                 <View style={stylesTable.tableRow}>
                   <View style={stylesTable.tableCol}>
                     <Text style={stylesTable.tableCell}>
-                      Luega de Entrega: {deliverPlace}
+                      Lugar de Entrega: {deliverPlace}
                     </Text>
                   </View>
                 </View>

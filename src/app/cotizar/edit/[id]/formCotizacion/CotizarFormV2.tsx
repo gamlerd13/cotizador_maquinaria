@@ -5,6 +5,7 @@ import React, { useRef, useState } from "react";
 // ui componets
 import { Input, Textarea } from "@nextui-org/input";
 import {
+  Button,
   Checkbox,
   DatePicker,
   DateValue,
@@ -45,12 +46,14 @@ import { ItemGet } from "@/models/items";
 import {
   CotizacionClientItemsGet,
   CotizacionFormDataPut,
+  CurrencySymbol,
   UnregisteredClientForm,
 } from "@/models/cotizacion";
 import { toast } from "sonner";
 import useDinamicItems from "../hooks/useDinamicItems";
 import { useLastCodeCotizacion } from "@/app/hooks/cotizacion/useLastCodeCotizacion";
 import { Currency } from "prisma/prisma-client";
+import { useRouter } from "next/navigation";
 
 interface CotizacionValue {
   clientId: number | null;
@@ -116,7 +119,7 @@ function CotizarFormV2({
     isEdit: true,
     includeIgv: cotizacion.includeIgv,
   });
-  console.log(cotizacionValues);
+
   const {
     items: productsSearch,
     getItems: getProductsSearch,
@@ -189,6 +192,7 @@ function CotizarFormV2({
       }, 0)
       .toFixed(2)
   );
+  const router = useRouter();
 
   return (
     <form onSubmit={handleSubmit}>
@@ -418,7 +422,9 @@ function CotizarFormV2({
               label="Precio de Venta Total"
               type="number"
               name="totalPrice"
-              startContent={<span>$. </span>}
+              startContent={
+                <span>{CurrencySymbol[cotizacionValues.currency]} </span>
+              }
               // value={totalPrice}
               value={
                 cotizacionValues.includeIgv
@@ -535,7 +541,10 @@ function CotizarFormV2({
           />
         </div>
       </div>
-      <div className="flex justify-end pt-4">
+      <div className="flex justify-end pt-4 gap-x-2">
+        <Button onPress={() => router.push("/cotizaciones")} color="default">
+          Cancelar
+        </Button>
         <ButtonSubmit text="Actualizar cotización" />
       </div>
     </form>
