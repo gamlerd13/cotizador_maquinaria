@@ -105,10 +105,8 @@ function ItemTable({ useItems }: { useItems: Omit<UseItemsProp, "getItems"> }) {
         <TableHeader>
           <TableColumn>Numero</TableColumn>
           <TableColumn>Nombre</TableColumn>
-          <TableColumn>Código</TableColumn>
           <TableColumn>Numero de Parte</TableColumn>
           <TableColumn>Marca</TableColumn>
-          <TableColumn>Peso</TableColumn>
           <TableColumn>Unidad de Medida</TableColumn>
           <TableColumn>Precio unitario</TableColumn>
           <TableColumn>Acciones</TableColumn>
@@ -124,10 +122,8 @@ function ItemTable({ useItems }: { useItems: Omit<UseItemsProp, "getItems"> }) {
             <TableRow key={item.id}>
               <TableCell>{item.id}</TableCell>
               <TableCell>{item.name}</TableCell>
-              <TableCell>{item.code}</TableCell>
               <TableCell>{item.partNumber}</TableCell>
               <TableCell>{item.brand}</TableCell>
-              <TableCell>{item.weight}</TableCell>
               <TableCell>{UnitOfMeasureES[item.unitMeasure]}</TableCell>
               <TableCell>{item.unitPrice.toFixed(2)}</TableCell>
 

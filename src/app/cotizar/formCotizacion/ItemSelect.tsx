@@ -21,7 +21,7 @@ export default function ItemSelect({
 }: ItemSelectProps) {
   const options = itemList.map((item) => ({
     value: item,
-    label: `${item.code} - ${item.name}`,
+    label: `${item.partNumber} - ${item.name}`,
   }));
 
   const handleOnchange = (e: OptionsProps) => {

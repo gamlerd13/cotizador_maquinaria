@@ -17,7 +17,6 @@ export interface ItemGet {
   description: string;
   unitPrice: number;
   unitMeasure: UnitOfMeasure;
-  weight: number;
   partNumber: string;
   brand: string;
   code: string;

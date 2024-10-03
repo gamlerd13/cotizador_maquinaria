@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
       where: {
         OR: [
           { name: { contains: query, mode: "insensitive" } }, // Búsqueda por nombre
-          { code: { contains: query, mode: "insensitive" } }, // Búsqueda por descripción
+          { partNumber: { contains: query, mode: "insensitive" } }, // Búsqueda por descripción
         ],
       },
       orderBy: {

@@ -38,7 +38,7 @@ export default function ProductItem({
             size="sm"
             className="w-full z-0"
             type="text"
-            value={`${dinamicItem.item.code}-${dinamicItem.item.name}`}
+            value={`${dinamicItem.item.partNumber}-${dinamicItem.item.name}`}
             label="Producto"
             disabled
           />

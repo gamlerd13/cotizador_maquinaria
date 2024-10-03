@@ -62,9 +62,6 @@ function ModalItem({
       unitMeasure:
         (formData.get("unitMeasure") as UnitOfMeasure) ||
         UnitOfMeasure.KILOGRAM,
-      weight: parseFloat(
-        parseFloat(formData.get("weight")?.toString() || "0").toFixed(2)
-      ),
       unitPrice: parseFloat(
         parseFloat(formData.get("unitPrice")?.toString() || "0").toFixed(2)
       ),
@@ -140,15 +137,6 @@ function FormItem({
         })
       : undefined;
 
-  const weight =
-    initialData?.weight !== undefined
-      ? initialData.weight.toLocaleString("es-PE", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-          useGrouping: false,
-        })
-      : undefined;
-
   return (
     <form className="mb-8 grid gap-2" onSubmit={handleSubmit}>
       <div className="w-full">
@@ -174,13 +162,22 @@ function FormItem({
       </div>
 
       <div className="grid md:grid-cols-2 gap-2">
-        <Input
+        {/* TODO: handle whit code ever, this is just for this particulary client */}
+        {/* <Input
           size="sm"
           className="md:col-span-1"
           type="text"
           name="code"
           defaultValue={initialData?.code}
           label="Código"
+        /> */}
+        <Input
+          size="sm"
+          className="md:col-span-1"
+          type="text"
+          name="partNumber"
+          defaultValue={initialData?.partNumber}
+          label="Numero de Parte"
         />
         <Input
           size="sm"
@@ -193,14 +190,6 @@ function FormItem({
       </div>
 
       <div className="grid md:grid-cols-2 gap-2">
-        <Input
-          size="sm"
-          className="md:col-span-1"
-          type="text"
-          name="partNumber"
-          defaultValue={initialData?.partNumber}
-          label="Numero de Parte"
-        />
         <Select
           label="Unidad de Medida"
           placeholder="Seleccione"
@@ -213,9 +202,6 @@ function FormItem({
             </SelectItem>
           ))}
         </Select>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-2">
         <Input
           size="sm"
           className="md:col-span-1"
@@ -224,15 +210,6 @@ function FormItem({
           //   defaultValue={initialData?.unitPrice.toString()}
           defaultValue={unitPrice}
           label="Precio Unitario"
-        />
-        <Input
-          size="sm"
-          className="md:col-span-1"
-          type="number"
-          name="weight"
-          //   defaultValue={initialData?.weight.toString()}
-          defaultValue={weight}
-          label="Peso (KLgr)"
         />
       </div>
 

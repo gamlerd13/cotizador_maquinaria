@@ -126,10 +126,10 @@ model Item {
   name           String
   brand          String           @default("")
   description    String           @default("")
-  partNumber     String           @default("")
-  weight         Float
+  partNumber     String           @default("") // That is gonna work only for this kedev's client,
   unitPrice      Float
-  code           String           @unique
+  // code           String           @unique //This is the correct way
+  code           String           @default("") //@unique  // That is gonna work only for this kedev's client
   unitMeasure    UnitOfMeasure    @default(UNIT)
   status         ProductStatus    @default(ACTIVE)
   CotizacionItem CotizacionItem[]

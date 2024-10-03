@@ -216,8 +216,8 @@ const ReactPdfComponentV2 = ({
             <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
               N° Item
             </Text>
-            <Text style={[styles.tableCell, { flex: 1 }]}>Código Art.</Text>
-            <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
+            {/* <Text style={[styles.tableCell, { flex: 1 }]}>Código Art.</Text> */}
+            <Text style={[styles.tableCell, styles.cellFlex, { flex: 2 }]}>
               Numero de Parte.
             </Text>
             <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
@@ -232,9 +232,7 @@ const ReactPdfComponentV2 = ({
             <Text style={[styles.tableCell, styles.cellFlex, { flex: 2 }]}>
               Marca
             </Text>
-            <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
-              Peso Kg.
-            </Text>
+
             <Text style={[styles.tableCell, styles.cellFlex, { flex: 2 }]}>
               Precio unitario {CurrencySymbol[currency]}
             </Text>
@@ -247,10 +245,10 @@ const ReactPdfComponentV2 = ({
               <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
                 {index + 1}
               </Text>
-              <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
+              {/* <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
                 {item.item.code}
-              </Text>
-              <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
+              </Text> */}
+              <Text style={[styles.tableCell, styles.cellFlex, { flex: 2 }]}>
                 {item.item.partNumber}
               </Text>
 
@@ -266,13 +264,23 @@ const ReactPdfComponentV2 = ({
               <Text style={[styles.tableCell, styles.cellFlex, { flex: 2 }]}>
                 {item.item.brand}
               </Text>
-              <Text style={[styles.tableCell, styles.cellFlex, { flex: 1 }]}>
-                {item.item.weight}
-              </Text>
-              <Text style={[styles.tableCell, styles.cellFlex, { flex: 2 }]}>
+
+              <Text
+                style={[
+                  styles.tableCell,
+                  styles.cellFlex,
+                  { flex: 2, textAlign: "right" },
+                ]}
+              >
                 {item.unitPrice}
               </Text>
-              <Text style={[styles.tableCell, styles.cellFlex, { flex: 2 }]}>
+              <Text
+                style={[
+                  styles.tableCell,
+                  styles.cellFlex,
+                  { flex: 2, textAlign: "right" },
+                ]}
+              >
                 {item.totalPrice}
               </Text>
             </View>
