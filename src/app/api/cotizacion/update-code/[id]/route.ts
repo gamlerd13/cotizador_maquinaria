@@ -41,6 +41,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
       includeIgv,
       currency,
       items,
+      companyInf,
     } = body;
 
     //  manejar el codigo, asegurar que exista una coti. padre
@@ -67,6 +68,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
       isEdit,
       includeIgv,
       currency,
+      companyInf,
       code: newCode,
       clientId: clientId ? clientId : null,
       unregisteredClientName: clientId ? null : unregisteredClientName,

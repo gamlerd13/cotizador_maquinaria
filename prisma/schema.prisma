@@ -80,6 +80,7 @@ model Cotizacion {
   unregisteredClientReference String?
   unregisteredClientRuc       String?
   //frontend values
+  companyInf                  String           @default("")
   date                        DateTime
   deliverTime                 String           @default("") // Tiempo de entrega
   paymentCondition            String           @default("") // condicion de pagp

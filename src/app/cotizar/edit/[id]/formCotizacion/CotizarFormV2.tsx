@@ -70,6 +70,7 @@ interface CotizacionValue {
   totalPrice: number;
   isEdit: boolean;
   includeIgv: boolean;
+  companyInf: string;
 }
 
 const clientInitialValues = {
@@ -118,6 +119,7 @@ function CotizarFormV2({
     totalPrice: cotizacion.totalPrice,
     isEdit: true,
     includeIgv: cotizacion.includeIgv,
+    companyInf: cotizacion.companyInf,
   });
 
   const {
@@ -196,6 +198,28 @@ function CotizarFormV2({
 
   return (
     <form onSubmit={handleSubmit}>
+      <div className="flex justify-between items-center mb-4">
+        <div className="w-full">
+          <h1 className="font-medium text-slate-600">Datos de la Empresa</h1>
+          <div className="w-full">
+            <div className="w-full pt-2 ">
+              <Input
+                size="sm"
+                label="Numeros de telefono"
+                className="z-0"
+                value={cotizacionValues.companyInf}
+                onChange={(e) =>
+                  setCotizacionValues((prev) => ({
+                    ...prev,
+                    companyInf: e.target.value,
+                  }))
+                }
+                type="text"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="font-medium text-slate-600">Cliente</h1>
         <div className="flex gap-x-2">

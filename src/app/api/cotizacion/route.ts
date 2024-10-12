@@ -26,6 +26,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       isEdit,
       includeIgv,
       items,
+      companyInf,
     } = body;
 
     //  handle code here
@@ -49,6 +50,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       totalPrice,
       isEdit,
       includeIgv,
+      companyInf,
       status: CotizacionStatus.ESTADO1,
       parentCode: newCode, //TODO: creck this if include
       code: newCode,

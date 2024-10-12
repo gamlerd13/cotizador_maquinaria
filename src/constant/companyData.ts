@@ -6,7 +6,7 @@ export const companyData: CompanyData = {
   location:
     "CAL.6 U NRO. 05 A.H. NUEVO AMANECER LIMA - LIMA - SAN MARTIN DE PORRES",
   ruc: 20613144731,
-  phoneNumber: null,
+  phoneNumber: ["968777213", "972727164"],
   email: null,
 };
 

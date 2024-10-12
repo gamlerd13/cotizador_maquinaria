@@ -20,6 +20,7 @@ export interface CotizacionBase {
   currency: Currency;
   isEdit: boolean;
   includeIgv: boolean;
+  companyInf: string;
   unregisteredClientName: string;
   unregisteredClientContact: string;
   unregisteredClientReference: string;
@@ -46,6 +47,7 @@ export type CotizacionFormDataPost = {
   isEdit: boolean;
   currency: Currency;
   includeIgv: boolean;
+  companyInf: string;
   items: DinamicFrontendItemItemPost[];
   // Unregister client
 } & UnregisteredClientForm;

@@ -53,6 +53,7 @@ const ReactPdfComponentV2 = ({
     currency,
     includeIgv,
     cotizacionItem,
+    companyInf,
   } = cotizacion;
 
   const clientData = {
@@ -119,6 +120,7 @@ const ReactPdfComponentV2 = ({
               </Text>
               <Text style={[styles.boldText]}>{companyData.location}</Text>
               <Text>R.U.C. {companyData.ruc}</Text>
+              <Text>Numero(s) de telefono: {companyInf}</Text>
             </View>
             <View style={[{ paddingVertical: 8 }]}>
               <Text>Señor (a) (es):</Text>
